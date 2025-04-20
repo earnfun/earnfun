@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+        <linearGradient id="primaryGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" style="stop-color:#6366f1;stop-opacity:1" />
+            <stop offset="100%" style="stop-color:#4f46e5;stop-opacity:1" />
+        </linearGradient>
+        <filter id="glow">
+            <feGaussianBlur stdDeviation="8" result="coloredBlur"/>
+            <feMerge>
+                <feMergeNode in="coloredBlur"/>
+                <feMergeNode in="SourceGraphic"/>
+            </feMerge>
+        </filter>
+        <filter id="shadow">
+            <feDropShadow dx="0" dy="4" stdDeviation="8" flood-color="#4f46e5" flood-opacity="0.5"/>
+        </filter>
+    </defs>
+    
+    <!-- Dragon Body -->
+    <path d="M256 48c-110.532 0-200 89.451-200 200 0 110.532 89.451 200 200 200 110.532 0 200-89.451 200-200 0-110.532-89.451-200-200-200zm0 50c82.843 0 150 67.157 150 150s-67.157 150-150 150S106 330.843 106 248s67.157-150 150-150z" 
+          fill="url(#primaryGradient)" 
+          filter="url(#glow)"/>
+    
+    <!-- Dragon Wings -->
+    <path d="M363.783 184.713c-17.877-17.877-46.785-17.877-64.662 0L256 227.835l-43.121-43.122c-17.877-17.877-46.785-17.877-64.662 0-17.877 17.877-17.877 46.785 0 64.662L191.338 292.5l-43.121 43.121c-17.877 17.877-17.877 46.785 0 64.662 17.877 17.877 46.785 17.877 64.662 0L256 356.165l43.121 43.122c17.877 17.877 46.785 17.877 64.662 0 17.877-17.877 17.877-46.785 0-64.662L320.662 292.5l43.121-43.121c17.877-17.877 17.877-46.785 0-64.662z" 
+          fill="url(#primaryGradient)" 
+          filter="url(#shadow)"/>
+    
+    <!-- Dragon Eye -->
+    <circle cx="256" cy="248" r="32" 
+            fill="url(#primaryGradient)" 
+            filter="url(#glow)"/>
+    
+    <!-- Dragon Scales -->
+    <g fill="url(#primaryGradient)" filter="url(#shadow)">
+        <circle cx="256" cy="188" r="12"/>
+        <circle cx="256" cy="308" r="12"/>
+        <circle cx="196" cy="248" r="12"/>
+        <circle cx="316" cy="248" r="12"/>
+    </g>
+    
+    <!-- Animated Energy Orbs -->
+    <g fill="url(#primaryGradient)" filter="url(#glow)">
+        <circle cx="226" cy="218" r="8">
+            <animate attributeName="opacity" values="0.3;1;0.3" dur="2s" repeatCount="indefinite"/>
+        </circle>
+        <circle cx="286" cy="218" r="8">
+            <animate attributeName="opacity" values="1;0.3;1" dur="2s" repeatCount="indefinite"/>
+        </circle>
+        <circle cx="226" cy="278" r="8">
+            <animate attributeName="opacity" values="0.3;1;0.3" dur="2s" repeatCount="indefinite"/>
+        </circle>
+        <circle cx="286" cy="278" r="8">
+            <animate attributeName="opacity" values="1;0.3;1" dur="2s" repeatCount="indefinite"/>
+        </circle>
+    </g>
+</svg>
