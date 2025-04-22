@@ -6,10 +6,10 @@ if (!defined('ABSPATH')) {
 
 // Eklenti aktifleştirildiğinde çalışacak fonksiyon
 function odib_activate() {
-    global $wqdb;
+    global $wqsdb;
     
-    $table_name = $wqdb->prefix . 'odib_characters';
-    $charset_collate = $wqdb->get_charset_collate();
+    $table_name = $wqsdb->prefix . 'odib_characters';
+    $charset_collate = $wqsdb->get_charset_collate();
 
     $sql = "CREATE TABLE IF NOT EXISTS $table_name (
         id mediumint(9) NOT NULL AUTO_INCREMENT,
@@ -20,7 +20,7 @@ function odib_activate() {
         PRIMARY KEY  (id)
     ) $charset_collate;";
 
-    require_once(ABSPATH . 'wqad/includes/upgrade.php');
+    require_once(ABSPATH . 'wqsadm/includes/upgrade.php');
     dbDelta($sql);
 }
 register_activation_hook(__FILE__, 'odib_activate');
@@ -32,10 +32,10 @@ define('odib_PLUGIN_URL', plugin_dir_url(__FILE__));
 
 // Veritabanı tablosunu oluştur
 function odib_create_tables() {
-    global $wqdb;
-    $charset_collate = $wqdb->get_charset_collate();
+    global $wqsdb;
+    $charset_collate = $wqsdb->get_charset_collate();
     
-    $sql = "CREATE TABLE IF NOT EXISTS {$wqdb->prefix}odib_characters (
+    $sql = "CREATE TABLE IF NOT EXISTS {$wqsdb->prefix}odib_characters (
         id mediumint(9) NOT NULL AUTO_INCREMENT,
         character_name varchar(100) NOT NULL,
         image_url text NOT NULL,
@@ -44,7 +44,7 @@ function odib_create_tables() {
         PRIMARY KEY  (id)
     ) $charset_collate;";
     
-    require_once(ABSPATH . 'wqad/includes/upgrade.php');
+    require_once(ABSPATH . 'wqsadm/includes/upgrade.php');
     dbDelta($sql);
 }
 register_activation_hook(__FILE__, 'odib_create_tables');
@@ -99,8 +99,13 @@ function odib_character_creator_shortcode() {
     ?>
     <div class="odib-container">
         <div class="odib-header">
-            <img src="<?php echo plugins_url('assets/dragon-logo.svg', __FILE__); ?>" alt="AI Game Designer Logo" class="odib-logo">
-            <h1>AI Game Designer</h1>
+            <div class="odib-logo">
+                <img src="<?php echo plugins_url('assets/images/dragon-logo.svg', __FILE__); ?>" alt="AI Game Designer">
+            </div>
+            <div class="odib-header-content">
+                <h1>AI Game Designer</h1>
+                <p>Yapay zeka destekli oyun tasarım aracı ile hayal ettiğiniz oyunu kolayca oluşturun. Karakterler, hikayeler ve oyun mekanikleri için AI'dan ilham alın.</p>
+            </div>
         </div>
 
         <div class="odib-tabs-wrapper">
@@ -987,7 +992,7 @@ function odib_character_creator_shortcode() {
                 type: 'POST',
                 data: {
                     action: 'odib_generate_prompt',
-                    nonce: '<?php echo wq_create_nonce("odib_nonce"); ?>'
+                    nonce: '<?php echo wqs_create_nonce("odib_nonce"); ?>'
                 },
                 success: function(response) {
                     if (response.success) {
@@ -1029,7 +1034,7 @@ function odib_character_creator_shortcode() {
                         type: 'POST',
                         data: {
                             action: 'odib_create_preview',
-                            nonce: '<?php echo wq_create_nonce("odib_nonce"); ?>',
+                            nonce: '<?php echo wqs_create_nonce("odib_nonce"); ?>',
                             name: `${name}_${i + 1}`,
                             prompt: prompt
                         }
@@ -1078,7 +1083,7 @@ function odib_character_creator_shortcode() {
                 type: 'POST',
                 data: {
                     action: 'odib_save_character',
-                    nonce: '<?php echo wq_create_nonce("odib_nonce"); ?>',
+                    nonce: '<?php echo wqs_create_nonce("odib_nonce"); ?>',
                     name: name,
                     image_url: image_url,
                     prompt: prompt
@@ -1110,7 +1115,7 @@ function odib_character_creator_shortcode() {
                     type: 'POST',
                     data: {
                         action: 'odib_delete_character',
-                        nonce: '<?php echo wq_create_nonce("odib_nonce"); ?>',
+                        nonce: '<?php echo wqs_create_nonce("odib_nonce"); ?>',
                         character_id: characterId
                     },
                     success: function(response) {
@@ -1140,7 +1145,7 @@ function odib_character_creator_shortcode() {
                 type: 'POST',
                 data: {
                     action: 'odib_get_characters',
-                    nonce: '<?php echo wq_create_nonce("odib_nonce"); ?>'
+                    nonce: '<?php echo wqs_create_nonce("odib_nonce"); ?>'
                 },
                 success: function(response) {
                     if (response.success) {
@@ -1211,7 +1216,7 @@ function odib_character_creator_shortcode() {
                 type: 'POST',
                 data: {
                     action: 'odib_generate_concept',
-                    nonce: '<?php echo wq_create_nonce("odib_nonce"); ?>',
+                    nonce: '<?php echo wqs_create_nonce("odib_nonce"); ?>',
                     game_idea: gameIdea
                 },
                 success: function(response) {
@@ -1263,7 +1268,7 @@ function odib_character_creator_shortcode() {
         $('#uploadMediaBtn').on('click', function(e) {
             e.preventDefault();
             
-            const mediaUploader = wq.media({
+            const mediaUploader = wqs.media({
                 title: 'Coin Görseli Seç',
                 button: {
                     text: 'Seç'
@@ -1373,7 +1378,7 @@ function odib_character_creator_shortcode() {
                 type: 'POST',
                 data: {
                     action: 'odib_get_characters',
-                    _ajax_nonce: '<?php echo wq_create_nonce("odib_nonce"); ?>'
+                    _ajax_nonce: '<?php echo wqs_create_nonce("odib_nonce"); ?>'
                 },
                 success: function(response) {
                     if (response.success && response.data) {
@@ -1477,13 +1482,13 @@ function odib_generate_prompt() {
     $api_key = get_option('odib_openai_api_key', '');
     if (empty($api_key)) {
         error_log('API anahtarı bulunamadı');
-        wq_send_json_error('OpenAI API anahtarı ayarlanmamış.');
+        wqs_send_json_error('OpenAI API anahtarı ayarlanmamış.');
         return;
     }
 
     error_log('OpenAI API isteği gönderiliyor...');
 
-    $response = wq_remote_post('https://api.openai.com/v1/chat/completions', array(
+    $response = wqs_remote_post('https://api.openai.com/v1/chat/completions', array(
         'headers' => array(
             'Authorization' => 'Bearer ' . $api_key,
             'Content-Type' => 'application/json',
@@ -1506,30 +1511,30 @@ function odib_generate_prompt() {
         'timeout' => 60
     ));
 
-    if (is_wq_error($response)) {
+    if (is_wqs_error($response)) {
         error_log('API hatası: ' . $response->get_error_message());
-        wq_send_json_error('OpenAI API ile iletişim kurulamadı. Lütfen internet bağlantınızı kontrol edin ve tekrar deneyin. Hata: ' . $response->get_error_message());
+        wqs_send_json_error('OpenAI API ile iletişim kurulamadı. Lütfen internet bağlantınızı kontrol edin ve tekrar deneyin. Hata: ' . $response->get_error_message());
         return;
     }
 
-    $body = json_decode(wq_remote_retrieve_body($response), true);
+    $body = json_decode(wqs_remote_retrieve_body($response), true);
     error_log('API yanıtı: ' . print_r($body, true));
     
     if (isset($body['error'])) {
         error_log('API hata mesajı: ' . $body['error']['message']);
-        wq_send_json_error($body['error']['message']);
+        wqs_send_json_error($body['error']['message']);
         return;
     }
 
     if (!isset($body['choices'][0]['message']['content'])) {
         error_log('Beklenmeyen API yanıt formatı');
-        wq_send_json_error('API yanıtı beklenmeyen formatta.');
+        wqs_send_json_error('API yanıtı beklenmeyen formatta.');
         return;
     }
 
     $prompt = $body['choices'][0]['message']['content'];
     error_log('Oluşturulan prompt: ' . $prompt);
-    wq_send_json_success($prompt);
+    wqs_send_json_success($prompt);
 }
 
 // Önizleme oluşturma AJAX handler
@@ -1540,20 +1545,20 @@ function odib_create_preview() {
     $prompt = sanitize_text_field($_POST['prompt']);
     
     if (empty($name) || empty($prompt)) {
-        wq_send_json_error('Karakter adı ve prompt gereklidir.');
+        wqs_send_json_error('Karakter adı ve prompt gereklidir.');
         return;
     }
     
     $api_key = get_option('odib_openai_api_key', '');
     if (empty($api_key)) {
         error_log('API anahtarı bulunamadı');
-        wq_send_json_error('OpenAI API anahtarı ayarlanmamış.');
+        wqs_send_json_error('OpenAI API anahtarı ayarlanmamış.');
         return;
     }
 
     error_log('OpenAI API isteği gönderiliyor...');
 
-    $response = wq_remote_post('https://api.openai.com/v1/images/generations', array(
+    $response = wqs_remote_post('https://api.openai.com/v1/images/generations', array(
         'headers' => array(
             'Authorization' => 'Bearer ' . $api_key,
             'Content-Type' => 'application/json',
@@ -1568,27 +1573,27 @@ function odib_create_preview() {
         'timeout' => 60
     ));
 
-    if (is_wq_error($response)) {
+    if (is_wqs_error($response)) {
         error_log('API hatası: ' . $response->get_error_message());
-        wq_send_json_error('OpenAI API ile iletişim kurulamadı. Lütfen internet bağlantınızı kontrol edin ve tekrar deneyin. Hata: ' . $response->get_error_message());
+        wqs_send_json_error('OpenAI API ile iletişim kurulamadı. Lütfen internet bağlantınızı kontrol edin ve tekrar deneyin. Hata: ' . $response->get_error_message());
         return;
     }
 
-    $body = json_decode(wq_remote_retrieve_body($response), true);
+    $body = json_decode(wqs_remote_retrieve_body($response), true);
     
     if (isset($body['error'])) {
         error_log('API hata mesajı: ' . $body['error']['message']);
-        wq_send_json_error($body['error']['message']);
+        wqs_send_json_error($body['error']['message']);
         return;
     }
 
     if (!isset($body['data'][0]['url'])) {
         error_log('Beklenmeyen API yanıt formatı');
-        wq_send_json_error('API yanıtı beklenmeyen formatta.');
+        wqs_send_json_error('API yanıtı beklenmeyen formatta.');
         return;
     }
 
-    wq_send_json_success(array(
+    wqs_send_json_success(array(
         'name' => $name,
         'image_url' => $body['data'][0]['url'],
         'prompt' => $prompt
@@ -1604,14 +1609,14 @@ function odib_save_character() {
     $prompt = sanitize_text_field($_POST['prompt']);
     
     if (empty($name) || empty($image_url) || empty($prompt)) {
-        wq_send_json_error('Tüm alanlar gereklidir.');
+        wqs_send_json_error('Tüm alanlar gereklidir.');
         return;
     }
 
-    global $wqdb;
-    $table_name = $wqdb->prefix . 'odib_characters';
+    global $wqsdb;
+    $table_name = $wqsdb->prefix . 'odib_characters';
     
-    $result = $wqdb->insert(
+    $result = $wqsdb->insert(
         $table_name,
         array(
             'character_name' => $name,
@@ -1621,13 +1626,13 @@ function odib_save_character() {
         array('%s', '%s', '%s')
     );
 
-    if ($wqdb->last_error) {
-        error_log('Veritabanı hatası: ' . $wqdb->last_error);
-        wq_send_json_error('Veritabanı hatası: ' . $wqdb->last_error);
+    if ($wqsdb->last_error) {
+        error_log('Veritabanı hatası: ' . $wqsdb->last_error);
+        wqs_send_json_error('Veritabanı hatası: ' . $wqsdb->last_error);
         return;
     }
 
-    wq_send_json_success();
+    wqs_send_json_success();
 }
 
 // Karakter silme AJAX handler
@@ -1637,46 +1642,46 @@ function odib_delete_character() {
     $character_id = intval($_POST['character_id']);
     
     if (!$character_id) {
-        wq_send_json_error('Geçersiz karakter ID.');
+        wqs_send_json_error('Geçersiz karakter ID.');
         return;
     }
 
-    global $wqdb;
-    $table_name = $wqdb->prefix . 'odib_characters';
+    global $wqsdb;
+    $table_name = $wqsdb->prefix . 'odib_characters';
     
-    $result = $wqdb->delete(
+    $result = $wqsdb->delete(
         $table_name,
         array('id' => $character_id),
         array('%d')
     );
 
-    if ($wqdb->last_error) {
-        error_log('Veritabanı hatası: ' . $wqdb->last_error);
-        wq_send_json_error('Veritabanı hatası: ' . $wqdb->last_error);
+    if ($wqsdb->last_error) {
+        error_log('Veritabanı hatası: ' . $wqsdb->last_error);
+        wqs_send_json_error('Veritabanı hatası: ' . $wqsdb->last_error);
         return;
     }
 
-    wq_send_json_success();
+    wqs_send_json_success();
 }
 
 // Karakterleri getirme AJAX handler
 function odib_get_characters() {
     check_ajax_referer('odib_nonce', '_ajax_nonce');
     
-    global $wqdb;
-    $table_name = $wqdb->prefix . 'odib_characters';
+    global $wqsdb;
+    $table_name = $wqsdb->prefix . 'odib_characters';
     
-    $characters = $wqdb->get_results(
+    $characters = $wqsdb->get_results(
         "SELECT id, character_name, image_url, prompt FROM $table_name ORDER BY character_name ASC",
         ARRAY_A
     );
 
-    if ($wqdb->last_error) {
-        wq_send_json_error('Veritabanı hatası: ' . $wqdb->last_error);
+    if ($wqsdb->last_error) {
+        wqs_send_json_error('Veritabanı hatası: ' . $wqsdb->last_error);
         return;
     }
 
-    wq_send_json_success($characters);
+    wqs_send_json_success($characters);
 }
 
 // Oyun konsepti oluşturma AJAX handler
@@ -1686,14 +1691,14 @@ function odib_generate_concept() {
     $game_idea = sanitize_text_field($_POST['game_idea']);
     
     if (empty($game_idea)) {
-        wq_send_json_error('Oyun fikri gereklidir.');
+        wqs_send_json_error('Oyun fikri gereklidir.');
         return;
     }
     
     $api_key = get_option('odib_openai_api_key', '');
     if (empty($api_key)) {
         error_log('API anahtarı bulunamadı');
-        wq_send_json_error('OpenAI API anahtarı ayarlanmamış.');
+        wqs_send_json_error('OpenAI API anahtarı ayarlanmamış.');
         return;
     }
 
@@ -1706,7 +1711,7 @@ function odib_generate_concept() {
 
     Her başlık için en az 3-4 cümle yaz. Yaratıcı ol ama gerçekçi ve uygulanabilir fikirler üret.";
 
-    $response = wq_remote_post('https://api.openai.com/v1/chat/completions', array(
+    $response = wqs_remote_post('https://api.openai.com/v1/chat/completions', array(
         'headers' => array(
             'Authorization' => 'Bearer ' . $api_key,
             'Content-Type' => 'application/json',
@@ -1729,23 +1734,23 @@ function odib_generate_concept() {
         'timeout' => 60
     ));
 
-    if (is_wq_error($response)) {
+    if (is_wqs_error($response)) {
         error_log('API hatası: ' . $response->get_error_message());
-        wq_send_json_error('OpenAI API ile iletişim kurulamadı. Lütfen internet bağlantınızı kontrol edin ve tekrar deneyin. Hata: ' . $response->get_error_message());
+        wqs_send_json_error('OpenAI API ile iletişim kurulamadı. Lütfen internet bağlantınızı kontrol edin ve tekrar deneyin. Hata: ' . $response->get_error_message());
         return;
     }
 
-    $body = json_decode(wq_remote_retrieve_body($response), true);
+    $body = json_decode(wqs_remote_retrieve_body($response), true);
     
     if (isset($body['error'])) {
         error_log('API hata mesajı: ' . $body['error']['message']);
-        wq_send_json_error($body['error']['message']);
+        wqs_send_json_error($body['error']['message']);
         return;
     }
 
     if (!isset($body['choices'][0]['message']['content'])) {
         error_log('Beklenmeyen API yanıt formatı');
-        wq_send_json_error('API yanıtı beklenmeyen formatta.');
+        wqs_send_json_error('API yanıtı beklenmeyen formatta.');
         return;
     }
 
@@ -1771,7 +1776,7 @@ function odib_generate_concept() {
         }
     }
 
-    wq_send_json_success($sections);
+    wqs_send_json_success($sections);
 }
 
 // Coin oluşturma AJAX handler
@@ -1786,14 +1791,14 @@ function odib_create_coin() {
     $distribution_percentage = floatval($_POST['distributionPercentage']);
     
     if (empty($name) || empty($ticker) || empty($description) || empty($media_url) || !$game_id || $distribution_percentage < 0 || $distribution_percentage > 20) {
-        wq_send_json_error('Tüm alanlar gereklidir.');
+        wqs_send_json_error('Tüm alanlar gereklidir.');
         return;
     }
 
-    global $wqdb;
-    $table_name = $wqdb->prefix . 'odib_coins';
+    global $wqsdb;
+    $table_name = $wqsdb->prefix . 'odib_coins';
     
-    $result = $wqdb->insert(
+    $result = $wqsdb->insert(
         $table_name,
         array(
             'name' => $name,
@@ -1806,71 +1811,85 @@ function odib_create_coin() {
         array('%s', '%s', '%s', '%s', '%d', '%f')
     );
 
-    if ($wqdb->last_error) {
-        error_log('Veritabanı hatası: ' . $wqdb->last_error);
-        wq_send_json_error('Veritabanı hatası: ' . $wqdb->last_error);
+    if ($wqsdb->last_error) {
+        error_log('Veritabanı hatası: ' . $wqsdb->last_error);
+        wqs_send_json_error('Veritabanı hatası: ' . $wqsdb->last_error);
         return;
     }
 
-    wq_send_json_success();
+    wqs_send_json_success();
 }
 
 // Oyunları getirme AJAX handler
 function odib_get_games() {
-    global $wqdb;
-    $table_name = $wqdb->prefix . 'odib_games';
+    global $wqsdb;
+    $table_name = $wqsdb->prefix . 'odib_games';
     
-    $games = $wqdb->get_results(
+    $games = $wqsdb->get_results(
         "SELECT * FROM $table_name ORDER BY name ASC",
         ARRAY_A
     );
 
-    if ($wqdb->last_error) {
-        error_log('Veritabanı hatası: ' . $wqdb->last_error);
-        wq_send_json_error('Veritabanı hatası: ' . $wqdb->last_error);
+    if ($wqsdb->last_error) {
+        error_log('Veritabanı hatası: ' . $wqsdb->last_error);
+        wqs_send_json_error('Veritabanı hatası: ' . $wqsdb->last_error);
         return;
     }
 
-    wq_send_json_success($games);
+    wqs_send_json_success($games);
 }
 
 // Gerekli script ve stilleri ekleyelim
 function odib_enqueue_scripts() {
-    // CSS dosyasını yükle
-    wq_enqueue_style('odib-styles', plugins_url('assets/css/style.css', __FILE__), array(), time());
+    // Debug
+    error_log('odib: Enqueuing styles and scripts');
+    
+    $css_file = plugins_url('css/style.css', __FILE__);
+    $css_path = plugin_dir_path(__FILE__) . 'css/style.css';
+    
+    if (file_exists($css_path)) {
+        $css_version = filemtime($css_path);
+        error_log('odib: CSS file exists at: ' . $css_path);
+        error_log('odib: CSS URL will be: ' . $css_file);
+        
+        // CSS dosyasını yükle
+        wqs_enqueue_style('odib-styles', $css_file, array(), $css_version);
+    } else {
+        error_log('odib: CSS file not found at: ' . $css_path);
+    }
     
     // JavaScript dosyasını yükle
-    wq_enqueue_script('odib-main', plugins_url('assets/js/main.js', __FILE__), array('jquery'), time(), true);
+    wqs_enqueue_script('odib-main', plugins_url('js/main.js', __FILE__), array('jquery'), time(), true);
     
     // AJAX URL'sini JavaScript'e aktar
-    wq_localize_script('odib-main', 'odibAjax', array(
+    wqs_localize_script('odib-main', 'odibAjax', array(
         'ajaxurl' => admin_url('admin-ajax.php'),
-        'nonce' => wq_create_nonce('odib-nonce')
+        'nonce' => wqs_create_nonce('odib-nonce')
     ));
 }
-add_action('wq_enqueue_scripts', 'odib_enqueue_scripts');
+add_action('wqs_enqueue_scripts', 'odib_enqueue_scripts');
 
 // AJAX handlers
-add_action('wq_ajax_odib_generate_prompt', 'odib_generate_prompt');
-add_action('wq_ajax_nopriv_odib_generate_prompt', 'odib_generate_prompt');
+add_action('wqs_ajax_odib_generate_prompt', 'odib_generate_prompt');
+add_action('wqs_ajax_nopriv_odib_generate_prompt', 'odib_generate_prompt');
 
-add_action('wq_ajax_odib_create_preview', 'odib_create_preview');
-add_action('wq_ajax_nopriv_odib_create_preview', 'odib_create_preview');
+add_action('wqs_ajax_odib_create_preview', 'odib_create_preview');
+add_action('wqs_ajax_nopriv_odib_create_preview', 'odib_create_preview');
 
-add_action('wq_ajax_odib_save_character', 'odib_save_character');
-add_action('wq_ajax_nopriv_odib_save_character', 'odib_save_character');
+add_action('wqs_ajax_odib_save_character', 'odib_save_character');
+add_action('wqs_ajax_nopriv_odib_save_character', 'odib_save_character');
 
-add_action('wq_ajax_odib_delete_character', 'odib_delete_character');
-add_action('wq_ajax_nopriv_odib_delete_character', 'odib_delete_character');
+add_action('wqs_ajax_odib_delete_character', 'odib_delete_character');
+add_action('wqs_ajax_nopriv_odib_delete_character', 'odib_delete_character');
 
-add_action('wq_ajax_odib_get_characters', 'odib_get_characters');
-add_action('wq_ajax_nopriv_odib_get_characters', 'odib_get_characters');
+add_action('wqs_ajax_odib_get_characters', 'odib_get_characters');
+add_action('wqs_ajax_nopriv_odib_get_characters', 'odib_get_characters');
 
-add_action('wq_ajax_odib_generate_concept', 'odib_generate_concept');
-add_action('wq_ajax_nopriv_odib_generate_concept', 'odib_generate_concept');
+add_action('wqs_ajax_odib_generate_concept', 'odib_generate_concept');
+add_action('wqs_ajax_nopriv_odib_generate_concept', 'odib_generate_concept');
 
-add_action('wq_ajax_odib_create_coin', 'odib_create_coin');
-add_action('wq_ajax_nopriv_odib_create_coin', 'odib_create_coin');
+add_action('wqs_ajax_odib_create_coin', 'odib_create_coin');
+add_action('wqs_ajax_nopriv_odib_create_coin', 'odib_create_coin');
 
-add_action('wq_ajax_odib_get_games', 'odib_get_games');
-add_action('wq_ajax_nopriv_odib_get_games', 'odib_get_games');
+add_action('wqs_ajax_odib_get_games', 'odib_get_games');
+add_action('wqs_ajax_nopriv_odib_get_games', 'odib_get_games');
