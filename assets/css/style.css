@@ -55,7 +55,7 @@ body::before {
 }
 
 /* Cyber Container */
-.aigd-container {
+.odib-container {
     max-width: 1200px;
     margin: 2rem auto;
     padding: 2rem;
@@ -69,7 +69,7 @@ body::before {
     overflow: hidden;
 }
 
-.aigd-container::before {
+.odib-container::before {
     content: '';
     position: absolute;
     top: 0;
@@ -86,7 +86,7 @@ body::before {
 }
 
 /* AI Cards */
-.aigd-card {
+.odib-card {
     background: var(--glass-bg);
     border-radius: var(--border-radius);
     padding: 2rem;
@@ -97,8 +97,8 @@ body::before {
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.aigd-card::before,
-.aigd-card::after {
+.odib-card::before,
+.odib-card::after {
     content: '';
     position: absolute;
     width: 100%;
@@ -108,27 +108,27 @@ body::before {
     pointer-events: none;
 }
 
-.aigd-card::before {
+.odib-card::before {
     background: radial-gradient(circle at 50% 0%, var(--ai-primary), transparent 70%);
     opacity: 0;
     transition: opacity 0.4s ease;
 }
 
-.aigd-card::after {
+.odib-card::after {
     background: var(--matrix-bg);
     opacity: 0.1;
 }
 
-.aigd-card:hover {
+.odib-card:hover {
     transform: translateY(-10px);
     box-shadow: var(--neon-shadow);
 }
 
-.aigd-card:hover::before {
+.odib-card:hover::before {
     opacity: 0.1;
 }
 
-.aigd-card p {
+.odib-card p {
     color: var(--ai-light);
     line-height: 1.6;
     font-size: 1.1rem;
@@ -136,7 +136,7 @@ body::before {
 }
 
 /* Cyber Buttons */
-.aigd-button {
+.odib-button {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -160,7 +160,7 @@ body::before {
                  0 0 15px currentColor;
 }
 
-.aigd-button::before {
+.odib-button::before {
     content: '';
     position: absolute;
     width: 100%;
@@ -172,38 +172,38 @@ body::before {
     transition: transform 0.3s ease;
 }
 
-.aigd-button span {
+.odib-button span {
     position: relative;
     z-index: 1;
 }
 
-.aigd-button:hover {
+.odib-button:hover {
     color: var(--ai-dark);
     box-shadow: 0 0 20px var(--ai-primary);
     animation: neon-pulse 1s infinite alternate;
 }
 
-.aigd-button:hover::before {
+.odib-button:hover::before {
     transform: translateX(0) skew(-15deg);
 }
 
-.aigd-button-primary {
+.odib-button-primary {
     border-color: var(--ai-primary);
     color: var(--ai-primary);
 }
 
-.aigd-button-secondary {
+.odib-button-secondary {
     border-color: var(--ai-secondary);
     color: var(--ai-secondary);
 }
 
 /* AI Form Elements */
-.aigd-form-group {
+.odib-form-group {
     margin-bottom: 2rem;
     position: relative;
 }
 
-.aigd-label {
+.odib-label {
     display: block;
     margin-bottom: 0.75rem;
     color: var(--ai-secondary);
@@ -219,7 +219,7 @@ body::before {
     animation: neon-flicker 3s infinite;
 }
 
-.aigd-label::before {
+.odib-label::before {
     content: '>';
     position: absolute;
     left: 0;
@@ -231,7 +231,7 @@ body::before {
     50% { opacity: 0; }
 }
 
-.aigd-input {
+.odib-input {
     width: 100%;
     padding: 1rem 1.5rem;
     background: rgba(0, 255, 148, 0.05);
@@ -245,19 +245,19 @@ body::before {
     text-shadow: 0 0 2px var(--ai-primary);
 }
 
-.aigd-input:focus {
+.odib-input:focus {
     outline: none;
     box-shadow: 0 0 20px rgba(0, 255, 148, 0.3);
     border-color: var(--ai-primary);
 }
 
-.aigd-input::placeholder {
+.odib-input::placeholder {
     color: rgba(0, 255, 148, 0.5);
     text-shadow: none;
 }
 
 /* AI Character Preview */
-.aigd-character-preview {
+.odib-character-preview {
     position: relative;
     border-radius: var(--border-radius);
     overflow: hidden;
@@ -266,7 +266,7 @@ body::before {
     box-shadow: var(--neon-shadow);
 }
 
-.aigd-character-preview::before {
+.odib-character-preview::before {
     content: '';
     position: absolute;
     top: 0;
@@ -277,7 +277,7 @@ body::before {
     z-index: 1;
 }
 
-.aigd-character-preview img {
+.odib-character-preview img {
     width: 100%;
     height: 100%;
     object-fit: cover;
@@ -285,7 +285,7 @@ body::before {
     filter: brightness(0.8) saturate(1.2);
 }
 
-.aigd-character-info {
+.odib-character-info {
     position: absolute;
     bottom: 0;
     left: 0;
@@ -302,19 +302,19 @@ body::before {
                  0 0 15px var(--ai-primary);
 }
 
-.aigd-character-info h3 {
+.odib-character-info h3 {
     font-size: 1.5rem;
     margin-bottom: 1rem;
     letter-spacing: 2px;
     animation: neon-pulse 2s infinite alternate;
 }
 
-.aigd-character-preview:hover .aigd-character-info {
+.odib-character-preview:hover .odib-character-info {
     transform: translateY(0);
 }
 
 /* AI Grid Layout */
-.aigd-grid {
+.odib-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: 2rem;
@@ -322,7 +322,7 @@ body::before {
 }
 
 /* AI Loading Animation */
-.aigd-loading {
+.odib-loading {
     position: relative;
     min-height: 200px;
     display: flex;
@@ -330,7 +330,7 @@ body::before {
     justify-content: center;
 }
 
-.aigd-loading::after {
+.odib-loading::after {
     content: '';
     width: 50px;
     height: 50px;
@@ -345,7 +345,7 @@ body::before {
     to { transform: rotate(360deg); }
 }
 
-.aigd-loading-text {
+.odib-loading-text {
     color: var(--ai-secondary);
     font-size: 1.2rem;
     letter-spacing: 3px;
@@ -353,7 +353,7 @@ body::before {
 }
 
 /* AI Notifications */
-.aigd-notification {
+.odib-notification {
     position: fixed;
     bottom: 2rem;
     right: 2rem;
@@ -376,7 +376,7 @@ body::before {
 }
 
 /* AI Headings */
-.aigd-card h2 {
+.odib-card h2 {
     color: var(--ai-primary);
     font-size: 2rem;
     font-weight: 700;
@@ -393,7 +393,7 @@ body::before {
                  0 0 42px var(--ai-primary);
 }
 
-.aigd-card h2::after {
+.odib-card h2::after {
     content: '';
     position: absolute;
     bottom: -10px;
@@ -444,7 +444,7 @@ body::before {
 }
 
 /* Stats and Values */
-.aigd-stats {
+.odib-stats {
     color: var(--ai-secondary);
     font-size: 1.2rem;
     letter-spacing: 2px;
@@ -453,7 +453,7 @@ body::before {
 }
 
 /* Error Messages */
-.aigd-error {
+.odib-error {
     color: var(--ai-accent);
     text-shadow: 0 0 5px var(--ai-accent),
                  0 0 10px var(--ai-accent),
@@ -462,7 +462,7 @@ body::before {
 }
 
 /* Success Messages */
-.aigd-success {
+.odib-success {
     color: var(--ai-primary);
     text-shadow: 0 0 5px var(--ai-primary),
                  0 0 10px var(--ai-primary),
@@ -471,7 +471,7 @@ body::before {
 }
 
 /* Menu Items */
-.aigd-menu-item {
+.odib-menu-item {
     color: var(--ai-primary);
     font-family: 'Share Tech Mono', monospace;
     letter-spacing: 2px;
@@ -479,7 +479,7 @@ body::before {
     transition: all 0.3s ease;
 }
 
-.aigd-menu-item:hover {
+.odib-menu-item:hover {
     color: var(--ai-secondary);
     text-shadow: 0 0 5px var(--ai-secondary),
                  0 0 10px var(--ai-secondary),
@@ -487,7 +487,7 @@ body::before {
 }
 
 /* Section Titles */
-.aigd-section-title {
+.odib-section-title {
     font-family: 'Orbitron', sans-serif;
     font-size: 1.8rem;
     color: var(--ai-secondary);
@@ -518,21 +518,21 @@ body::before {
 
 /* Responsive Design */
 @media (max-width: 768px) {
-    .aigd-container {
+    .odib-container {
         margin: 1rem;
         padding: 1.5rem;
     }
     
-    .aigd-card {
+    .odib-card {
         padding: 1.5rem;
     }
     
-    .aigd-button {
+    .odib-button {
         width: 100%;
         margin-bottom: 1rem;
     }
 
-    .aigd-grid {
+    .odib-grid {
         grid-template-columns: 1fr;
         gap: 1.5rem;
     }
@@ -778,7 +778,7 @@ body::before {
 }
 
 /* Neon Efektli Modern Menü */
-.aigd-tabs-wrapper {
+.odib-tabs-wrapper {
     padding: 20px;
     background: linear-gradient(to right, #0f172a, #1e293b);
     border-radius: 20px;
@@ -787,7 +787,7 @@ body::before {
     overflow: hidden;
 }
 
-.aigd-tabs-wrapper::before {
+.odib-tabs-wrapper::before {
     content: '';
     position: absolute;
     top: 0;
@@ -803,7 +803,7 @@ body::before {
     );
 }
 
-.aigd-tabs {
+.odib-tabs {
     display: flex;
     justify-content: center;
     gap: 15px;
@@ -811,7 +811,7 @@ body::before {
     z-index: 1;
 }
 
-.aigd-tab-card {
+.odib-tab-card {
     position: relative;
     padding: 16px 28px;
     background: rgba(255, 255, 255, 0.03);
@@ -822,7 +822,7 @@ body::before {
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.aigd-tab-card::before {
+.odib-tab-card::before {
     content: '';
     position: absolute;
     top: 0;
@@ -838,7 +838,7 @@ body::before {
     transition: opacity 0.3s ease;
 }
 
-.aigd-tab-card:hover::before {
+.odib-tab-card:hover::before {
     opacity: 1;
 }
 
@@ -879,19 +879,19 @@ body::before {
         0 0 10px rgba(56, 189, 248, 0.3);
 }
 
-.aigd-tab-card:hover .neon-border {
+.odib-tab-card:hover .neon-border {
     opacity: 0.5;
 }
 
-.aigd-tab-card:hover .tab-content i {
+.odib-tab-card:hover .tab-content i {
     transform: translateY(-2px);
 }
 
-.aigd-tab-card:hover .tab-content span {
+.odib-tab-card:hover .tab-content span {
     color: #e2e8f0;
 }
 
-.aigd-tab-card.active {
+.odib-tab-card.active {
     background: rgba(56, 189, 248, 0.1);
     border-color: rgba(56, 189, 248, 0.3);
     box-shadow: 
@@ -899,11 +899,11 @@ body::before {
         inset 0 0 20px rgba(56, 189, 248, 0.1);
 }
 
-.aigd-tab-card.active .tab-content span {
+.odib-tab-card.active .tab-content span {
     color: #f8fafc;
 }
 
-.aigd-tab-card.active .neon-border {
+.odib-tab-card.active .neon-border {
     opacity: 1;
     box-shadow: 
         0 0 10px rgba(56, 189, 248, 0.7),
@@ -913,12 +913,12 @@ body::before {
 
 /* Responsive Tasarım */
 @media (max-width: 768px) {
-    .aigd-tabs-wrapper {
+    .odib-tabs-wrapper {
         padding: 15px;
         border-radius: 15px;
     }
 
-    .aigd-tabs {
+    .odib-tabs {
         flex-wrap: nowrap;
         overflow-x: auto;
         justify-content: flex-start;
@@ -928,11 +928,11 @@ body::before {
         -ms-overflow-style: none;
     }
 
-    .aigd-tabs::-webkit-scrollbar {
+    .odib-tabs::-webkit-scrollbar {
         display: none;
     }
 
-    .aigd-tab-card {
+    .odib-tab-card {
         padding: 12px 20px;
         flex-shrink: 0;
     }
@@ -965,7 +965,7 @@ body::before {
     }
 }
 
-.aigd-tab-card.active .neon-border {
+.odib-tab-card.active .neon-border {
     animation: neonPulse 2s infinite;
 }
 
