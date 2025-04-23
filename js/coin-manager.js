@@ -1,4 +1,5 @@
 jQuery(document).ready(function($) {
+    
     var mediaUploader;
     
     $('#upload-coin-media').on('click', function(e) {
