@@ -9,11 +9,23 @@ function odib_activate() {
     global $wqsdb;
     
     $table_name = $wqsdb->prefix . 'odib_characters';
+    $assets_table = $wqsdb->prefix . 'odib_assets';
     $charset_collate = $wqsdb->get_charset_collate();
 
     $sql = "CREATE TABLE IF NOT EXISTS $table_name (
         id mediumint(9) NOT NULL AUTO_INCREMENT,
-        character_name varchar(100) NOT NULL,
+        game_id mediumint(9) NOT NULL,
+        name varchar(100) NOT NULL,
+        description text NOT NULL,
+        image_url text NOT NULL,
+        created_at datetime DEFAULT CURRENT_TIMESTAMP,
+        PRIMARY KEY  (id)
+    ) $charset_collate;";
+
+    $assets_sql = "CREATE TABLE IF NOT EXISTS $assets_table (
+        id mediumint(9) NOT NULL AUTO_INCREMENT,
+        asset_type varchar(100) NOT NULL,
+        description text NOT NULL,
         image_url text NOT NULL,
         prompt text NOT NULL,
         created_at datetime DEFAULT CURRENT_TIMESTAMP,
@@ -22,6 +34,7 @@ function odib_activate() {
 
     require_once(ABSPATH . 'wqsadm/includes/upgrade.php');
     dbDelta($sql);
+    dbDelta($assets_sql);
 }
 register_activation_hook(__FILE__, 'odib_activate');
 
@@ -37,7 +50,18 @@ function odib_create_tables() {
     
     $sql = "CREATE TABLE IF NOT EXISTS {$wqsdb->prefix}odib_characters (
         id mediumint(9) NOT NULL AUTO_INCREMENT,
-        character_name varchar(100) NOT NULL,
+        game_id mediumint(9) NOT NULL,
+        name varchar(100) NOT NULL,
+        description text NOT NULL,
+        image_url text NOT NULL,
+        created_at datetime DEFAULT CURRENT_TIMESTAMP,
+        PRIMARY KEY  (id)
+    ) $charset_collate;";
+    
+    $assets_sql = "CREATE TABLE IF NOT EXISTS {$wqsdb->prefix}odib_assets (
+        id mediumint(9) NOT NULL AUTO_INCREMENT,
+        asset_type varchar(100) NOT NULL,
+        description text NOT NULL,
         image_url text NOT NULL,
         prompt text NOT NULL,
         created_at datetime DEFAULT CURRENT_TIMESTAMP,
@@ -46,6 +70,7 @@ function odib_create_tables() {
     
     require_once(ABSPATH . 'wqsadm/includes/upgrade.php');
     dbDelta($sql);
+    dbDelta($assets_sql);
 }
 register_activation_hook(__FILE__, 'odib_create_tables');
 
@@ -100,10 +125,13 @@ function odib_character_creator_shortcode() {
     <div class="odib-container">
         <div class="odib-header">
             <div class="odib-logo">
-                <img src="<?php echo plugins_url('assets/images/dragon-logo.svg', __FILE__); ?>" alt="AI Game Designer">
+                <i class="fas fa-dragon"></i>
             </div>
             <div class="odib-header-content">
-                <h1>AI Game Designer</h1>
+                <div class="title-wrapper">
+                    <h1>AI Game Designer</h1>
+                    <div class="created-by">by <span class="brand-text"><span class="earn">EARN</span><span class="fun">.fun</span></span></div>
+                </div>
                 <p>Yapay zeka destekli oyun tasarım aracı ile hayal ettiğiniz oyunu kolayca oluşturun. Karakterler, hikayeler ve oyun mekanikleri için AI'dan ilham alın.</p>
             </div>
         </div>
@@ -146,6 +174,14 @@ function odib_character_creator_shortcode() {
                     <div class="tab-content">
                         <i class="fas fa-coins"></i>
                         <span>Coin Oluştur</span>
+                    </div>
+                    <div class="neon-border"></div>
+                </button>
+
+                <button class="odib-tab-card" data-tab="asset">
+                    <div class="tab-content">
+                        <i class="fas fa-box"></i>
+                        <span>Asset Oluştur</span>
                     </div>
                     <div class="neon-border"></div>
                 </button>
@@ -208,59 +244,48 @@ function odib_character_creator_shortcode() {
 
         <div id="game-tab" class="odib-tab-content" style="display: none;">
             <div class="game-creator">
-                <div class="game-creator__header">
-                    <h2>Oyun Oluştur</h2>
-                </div>
-
-                <div class="game-creator__content">
-                    <div class="game-creator__main">
-                        <div class="creation-step">
-                            <h3>1. Karakterleri Seç</h3>
-                            <div class="character-list"></div>
-                            <div class="selected-characters">
-                                <span class="no-characters-text">Henüz karakter seçilmedi</span>
-                                <div class="selected-character-items"></div>
-                            </div>
-                        </div>
-
-                        <div class="creation-step">
-                            <h3>2. Oyun Türü</h3>
-                            <div class="game-type-select">
-                                <div class="type-buttons">
-                                    <button class="type-btn" data-type="action">
-                                        <i class="fas fa-gamepad"></i>
-                                        <span>Aksiyon</span>
-                                    </button>
-                                    <button class="type-btn" data-type="puzzle">
-                                        <i class="fas fa-puzzle-piece"></i>
-                                        <span>Bulmaca</span>
-                                    </button>
-                                    <button class="type-btn" data-type="adventure">
-                                        <i class="fas fa-map"></i>
-                                        <span>Macera</span>
-                                    </button>
-                                    <button class="type-btn" data-type="strategy">
-                                        <i class="fas fa-chess"></i>
-                                        <span>Strateji</span>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="creation-step">
-                            <h3>3. Oyun Detayları</h3>
-                            <div class="prompt-input">
-                                <textarea id="game-prompt" placeholder="Oyununuzu nasıl hayal ediyorsunuz? Detayları buraya yazın..."></textarea>
-                            </div>
-                        </div>
-
-                        <div class="game-creator__actions">
-                            <button id="createGameBtn" class="create-game-btn" disabled>
-                                <i class="fas fa-plus"></i> Oyun Oluştur
+                <div class="creation-step">
+                    <h3>1. Oyun Türü</h3>
+                    <div class="game-type-select">
+                        <div class="type-buttons">
+                            <button class="type-btn" data-type="action">
+                                <i class="fas fa-gamepad"></i>
+                                <span>Aksiyon</span>
+                            </button>
+                            <button class="type-btn" data-type="puzzle">
+                                <i class="fas fa-puzzle-piece"></i>
+                                <span>Bulmaca</span>
+                            </button>
+                            <button class="type-btn" data-type="adventure">
+                                <i class="fas fa-map"></i>
+                                <span>Macera</span>
+                            </button>
+                            <button class="type-btn" data-type="strategy">
+                                <i class="fas fa-chess"></i>
+                                <span>Strateji</span>
                             </button>
                         </div>
                     </div>
                 </div>
+
+                <div class="creation-step">
+                    <h3>2. Karakterler</h3>
+                    <div class="character-list"></div>
+                    <div class="selected-characters">
+                        <p>Henüz karakter seçilmedi</p>
+                    </div>
+                </div>
+
+                <div class="creation-step">
+                    <h3>3. Oyun Detayları</h3>
+                    <div class="prompt-container">
+                        <textarea id="game-prompt" placeholder="Oyununuzu nasıl hayal ediyorsunuz? Detayları buraya yazın..."></textarea>
+                    </div>
+                </div>
+
+                <button id="preview-game" class="preview-btn">
+                    <i class="fas fa-plus"></i> Oyun Oluştur
+                </button>
             </div>
         </div>
 
@@ -306,12 +331,17 @@ function odib_character_creator_shortcode() {
                         </div>
                         
                         <div class="form-group">
-                            <label for="distributionPercentage">Dağıtım Yüzdesi: <span id="percentageValue">0%</span></label>
-                            <div class="percentage-input">
-                                <input type="range" id="distributionPercentage" name="distributionPercentage" 
-                                       min="0" max="20" step="0.1" value="0">
-                                <input type="number" id="percentageNumber" 
-                                       min="0" max="20" step="0.1" value="0">
+                            <label for="distributionPercentage">Dağıtım Yüzdesi:</label>
+                            <div class="distribution-bar">
+                                <label>Dağıtım Yüzdesi</label>
+                                <div class="range-wrapper">
+                                    <input type="range" id="distributionPercentage" name="distributionPercentage" min="0" max="20" value="0" step="0.1">
+                                    <div class="value-display">0%</div>
+                                    <div class="range-labels">
+                                        <span>0%</span>
+                                        <span>20%</span>
+                                    </div>
+                                </div>
                             </div>
                             <small class="help-text">Maximum %20'ye kadar dağıtım yapılabilir</small>
                         </div>
@@ -322,6 +352,78 @@ function odib_character_creator_shortcode() {
                             </button>
                         </div>
                     </form>
+                </div>
+            </div>
+        </div>
+
+        <div id="asset-tab" class="odib-tab-content" style="display: none;">
+            <div class="asset-creator">
+                <div class="creator-header">
+                    <h2>2D Oyun Eşyası Oluşturucu</h2>
+                </div>
+
+                <div class="creator-content">
+                    <div class="creator-form">
+                        <form id="create-asset-form">
+                            <?php wqs_nonce_field('odib_nonce', '_ajax_nonce'); ?>
+                            
+                            <div class="form-group">
+                                <label for="asset-type">Eşya Tipi:</label>
+                                <select id="asset-type" name="asset_type" required>
+                                    <option value="">Seçiniz</option>
+                                    <option value="sword">Kılıç</option>
+                                    <option value="shield">Kalkan</option>
+                                    <option value="potion">İksir</option>
+                                    <option value="bow">Yay</option>
+                                    <option value="staff">Asa</option>
+                                    <option value="armor">Zırh</option>
+                                    <option value="ring">Yüzük</option>
+                                    <option value="amulet">Muska</option>
+                                    <option value="gem">Değerli Taş</option>
+                                    <option value="scroll">Tomar</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="asset-description">Özellikler:</label>
+                                <textarea id="asset-description" name="description" required placeholder="Eşyanın özelliklerini detaylı bir şekilde açıklayın... Örnek: Alevli, buzlu, zehirli, antik, büyülü vb."></textarea>
+                            </div>
+                            
+                            <div class="form-group">
+                                <button type="submit" class="button button-primary">
+                                    <i class="fas fa-magic"></i> Eşya Oluştur
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="preview-section" style="display: none;">
+                        <div class="preview-header">
+                            <h3>Önizleme</h3>
+                        </div>
+                        <div class="preview-content">
+                            <div class="preview-image">
+                                <!-- Önizleme görseli buraya gelecek -->
+                            </div>
+                            <div class="preview-actions">
+                                <button class="button button-primary save-asset">
+                                    <i class="fas fa-save"></i> Kaydet
+                                </button>
+                                <button class="button regenerate-asset">
+                                    <i class="fas fa-redo"></i> Yeniden Oluştur
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="saved-section">
+                        <div class="saved-header">
+                            <h3>Kaydedilen Eşyalar</h3>
+                        </div>
+                        <div class="saved-content">
+                            <div class="saved-grid"></div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -425,6 +527,17 @@ function odib_character_creator_shortcode() {
     }
     .dice-button:hover {
         transform: rotate(15deg);
+    }
+    .dice-button.spinning {
+        animation: spin 2s linear infinite;
+    }
+    @keyframes spin {
+        0% {
+            transform: rotate(0deg);
+        }
+        100% {
+            transform: rotate(360deg);
+        }
     }
     .save-character {
         background: #46b450;
@@ -1045,12 +1158,8 @@ function odib_character_creator_shortcode() {
                             <img src="${response.data.image_url}" alt="${response.data.name}">
                             <h3>${response.data.name}</h3>
                             <div class="character-actions">
-                                <button class="save-character" data-name="${response.data.name}" data-image="${response.data.image_url}" data-prompt="${response.data.prompt}">Kaydet</button>
-                                <button class="download-character" onclick="downloadImage('${response.data.image_url}', '${response.data.name}')">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                                        <path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/>
-                                    </svg>
-                                    İndir
+                                <button class="save-character" data-name="${response.data.name}" data-image="${response.data.image_url}" data-prompt="${response.data.prompt}">
+                                    <i class="fas fa-save"></i> Kaydet
                                 </button>
                             </div>
                         `);
@@ -1128,8 +1237,7 @@ function odib_character_creator_shortcode() {
                         }
                     },
                     error: function(xhr, status, error) {
-                        console.error('AJAX hatası:', error);
-                        alert('Bir hata oluştu: ' + error);
+                        console.error('AJAX Error:', error);
                     }
                 });
             }
@@ -1209,7 +1317,7 @@ function odib_character_creator_shortcode() {
             }
             
             $button.prop('disabled', true).text('Konsept Oluşturuluyor...');
-            $('.concept-section').hide().find('.content').empty();
+            $('.concept-section').hide();
 
             $.ajax({
                 url: ajaxurl,
@@ -1371,6 +1479,35 @@ function odib_character_creator_shortcode() {
         
         loadGames();
 
+        // Dice Button Animation
+        $('.dice-button').on('click', function() {
+            const $diceBtn = $(this);
+            $diceBtn.addClass('spinning');
+            
+            // Simüle edilmiş API çağrısı tamamlandığında animasyonu durdur
+            setTimeout(() => {
+                $diceBtn.removeClass('spinning');
+            }, 2000); // API çağrısı tamamlandığında bu süreyi ayarlayın
+        });
+
+        // Sync percentage inputs
+        function syncPercentageInputs(value) {
+            percentageRange.val(value);
+            percentageNumber.val(value);
+            percentageValue.text(value + '%');
+        }
+        
+        percentageRange.on('input', function() {
+            syncPercentageInputs($(this).val());
+        });
+        
+        percentageNumber.on('input', function() {
+            let value = $(this).val();
+            if (value > 20) value = 20;
+            if (value < 0) value = 0;
+            syncPercentageInputs(value);
+        });
+        
         // Karakter listesini yükle
         function loadCharacters() {
             $.ajax({
@@ -1468,6 +1605,49 @@ function odib_character_creator_shortcode() {
     });
     </script>
 
+    <script>
+        jQuery(document).ready(function($) {
+            $('#generate-concept').on('click', function() {
+                var button = $(this);
+                var gameIdea = $('#game-idea').val();
+                if (!gameIdea) {
+                    alert('Lütfen bir oyun fikri girin.');
+                    return;
+                }
+
+                // Loading durumunu göster
+                button.addClass('loading');
+                $('.concept-section').hide();
+
+                $.ajax({
+                    url: odib_ajax.ajax_url,
+                    type: 'POST',
+                    data: {
+                        action: 'odib_generate_concept',
+                        game_idea: gameIdea
+                    },
+                    success: function(response) {
+                        // Loading durumunu kaldır
+                        button.removeClass('loading');
+                        
+                        if (response.success) {
+                            $('.mechanics .content').html(response.data.mechanics);
+                            $('.level-design .content').html(response.data.level_design);
+                            $('.concept-section').fadeIn();
+                        } else {
+                            alert('Bir hata oluştu. Lütfen tekrar deneyin.');
+                        }
+                    },
+                    error: function() {
+                        // Loading durumunu kaldır
+                        button.removeClass('loading');
+                        alert('Bir hata oluştu. Lütfen tekrar deneyin.');
+                    }
+                });
+            });
+        });
+    </script>
+
     <?php
     return ob_get_clean();
 }
@@ -1475,6 +1655,8 @@ add_shortcode('ai_game_designer', 'odib_character_creator_shortcode');
 
 // Prompt oluşturma AJAX handler
 function odib_generate_prompt() {
+    error_log('odib_generate_prompt called');
+    
     check_ajax_referer('odib_nonce', 'nonce');
     
     error_log('Prompt oluşturma isteği alındı');
@@ -1539,6 +1721,8 @@ function odib_generate_prompt() {
 
 // Önizleme oluşturma AJAX handler
 function odib_create_preview() {
+    error_log('odib_create_preview called');
+    
     check_ajax_referer('odib_nonce', 'nonce');
     
     $name = sanitize_text_field($_POST['name']);
@@ -1567,8 +1751,9 @@ function odib_create_preview() {
             'prompt' => $prompt,
             'n' => 1,
             'size' => '256x256',
+            'response_format' => 'url',
             'model' => 'dall-e-2',
-            'response_format' => 'url'
+            'quality' => 'standard'
         )),
         'timeout' => 60
     ));
@@ -1602,6 +1787,8 @@ function odib_create_preview() {
 
 // Karakter kaydetme AJAX handler
 function odib_save_character() {
+    error_log('odib_save_character called');
+    
     check_ajax_referer('odib_nonce', 'nonce');
     
     $name = sanitize_text_field($_POST['name']);
@@ -1637,6 +1824,8 @@ function odib_save_character() {
 
 // Karakter silme AJAX handler
 function odib_delete_character() {
+    error_log('odib_delete_character called');
+    
     check_ajax_referer('odib_nonce', 'nonce');
     
     $character_id = intval($_POST['character_id']);
@@ -1666,10 +1855,14 @@ function odib_delete_character() {
 
 // Karakterleri getirme AJAX handler
 function odib_get_characters() {
-    check_ajax_referer('odib_nonce', '_ajax_nonce');
+    error_log('odib_get_characters called');
+    
+    check_ajax_referer('odib-nonce', '_ajax_nonce');
     
     global $wqsdb;
     $table_name = $wqsdb->prefix . 'odib_characters';
+    
+    error_log('Querying table: ' . $table_name);
     
     $characters = $wqsdb->get_results(
         "SELECT id, character_name, image_url, prompt FROM $table_name ORDER BY character_name ASC",
@@ -1677,15 +1870,19 @@ function odib_get_characters() {
     );
 
     if ($wqsdb->last_error) {
+        error_log('Database error: ' . $wqsdb->last_error);
         wqs_send_json_error('Veritabanı hatası: ' . $wqsdb->last_error);
         return;
     }
 
+    error_log('Found ' . count($characters) . ' characters');
     wqs_send_json_success($characters);
 }
 
 // Oyun konsepti oluşturma AJAX handler
 function odib_generate_concept() {
+    error_log('odib_generate_concept called');
+    
     check_ajax_referer('odib_nonce', 'nonce');
     
     $game_idea = sanitize_text_field($_POST['game_idea']);
@@ -1781,6 +1978,8 @@ function odib_generate_concept() {
 
 // Coin oluşturma AJAX handler
 function odib_create_coin() {
+    error_log('odib_create_coin called');
+    
     check_ajax_referer('odib_nonce', 'nonce');
     
     $name = sanitize_text_field($_POST['name']);
@@ -1839,24 +2038,154 @@ function odib_get_games() {
     wqs_send_json_success($games);
 }
 
+// Asset oluşturma AJAX handler
+function odib_generate_asset() {
+    check_ajax_referer('odib_nonce', '_ajax_nonce');
+    
+    $asset_type = sanitize_text_field($_POST['asset_type']);
+    $description = sanitize_text_field($_POST['description']);
+    
+    // 2D oyun eşyası için detaylı prompt oluştur
+    $prompt = "Create a detailed pixel art game item in classic RPG style. ";
+    $prompt .= "The item is a {$asset_type} with these features: {$description}. ";
+    $prompt .= "Requirements: pixel art style, transparent background, clear pixel edges, ";
+    $prompt .= "vibrant colors, proper shading, front view, game-ready asset, ";
+    $prompt .= "suitable for a 2D fantasy RPG game interface. Make it detailed but readable at small sizes.";
+    
+    $api_key = get_option('odib_openai_api_key', '');
+    
+    $args = array(
+        'headers' => array(
+            'Authorization' => 'Bearer ' . $api_key,
+            'Content-Type' => 'application/json'
+        ),
+        'body' => json_encode(array(
+            'prompt' => $prompt,
+            'n' => 1,
+            'size' => '1024x1024',
+            'response_format' => 'url',
+            'model' => 'dall-e-3',
+            'quality' => 'standard'
+        )),
+        'timeout' => 60,
+        'redirection' => 5,
+        'blocking' => true,
+        'sslverify' => false
+    );
+    
+    $response = wqs_remote_post('https://api.openai.com/v1/images/generations', $args);
+    
+    if (is_wqs_error($response)) {
+        wqs_send_json_error('API isteği başarısız oldu: ' . $response->get_error_message());
+        return;
+    }
+    
+    $body = json_decode(wqs_remote_retrieve_body($response), true);
+    
+    if (isset($body['error'])) {
+        wqs_send_json_error('API hatası: ' . $body['error']['message']);
+        return;
+    }
+    
+    if (isset($body['data'][0]['url'])) {
+        wqs_send_json_success(array(
+            'image_url' => $body['data'][0]['url'],
+            'asset_type' => $asset_type,
+            'description' => $description,
+            'prompt' => $prompt
+        ));
+    } else {
+        wqs_send_json_error('Görsel oluşturulamadı');
+    }
+    
+    wqs_die();
+}
+add_action('wqs_ajax_odib_generate_asset', 'odib_generate_asset');
+add_action('wqs_ajax_nopriv_odib_generate_asset', 'odib_generate_asset');
+
+// Asset kaydetme AJAX handler
+function odib_save_asset() {
+    check_ajax_referer('odib_nonce', 'nonce');
+    
+    global $wqsdb;
+    $table_name = $wqsdb->prefix . 'odib_assets';
+    
+    $asset_type = sanitize_text_field($_POST['asset_type']);
+    $description = sanitize_text_field($_POST['description']);
+    $image_url = esc_url_raw($_POST['image_url']);
+    $prompt = sanitize_text_field($_POST['prompt']);
+    
+    $result = $wqsdb->insert(
+        $table_name,
+        array(
+            'asset_type' => $asset_type,
+            'description' => $description,
+            'image_url' => $image_url,
+            'prompt' => $prompt
+        ),
+        array('%s', '%s', '%s', '%s')
+    );
+    
+    if ($result === false) {
+        wqs_send_json_error('Eşya kaydedilemedi');
+    } else {
+        wqs_send_json_success('Eşya başarıyla kaydedildi');
+    }
+    
+    wqs_die();
+}
+add_action('wqs_ajax_odib_save_asset', 'odib_save_asset');
+
+// Kaydedilen assetleri getirme AJAX handler
+function odib_get_assets() {
+    check_ajax_referer('odib_nonce', 'nonce');
+    
+    global $wqsdb;
+    $table_name = $wqsdb->prefix . 'odib_assets';
+    
+    $assets = $wqsdb->get_results("SELECT * FROM $table_name ORDER BY created_at DESC", ARRAY_A);
+    
+    wqs_send_json_success($assets);
+    wqs_die();
+}
+add_action('wqs_ajax_odib_get_assets', 'odib_get_assets');
+
+// Asset silme AJAX handler
+function odib_delete_asset() {
+    check_ajax_referer('odib_nonce', 'nonce');
+    
+    global $wqsdb;
+    $table_name = $wqsdb->prefix . 'odib_assets';
+    
+    $asset_id = intval($_POST['asset_id']);
+    
+    $result = $wqsdb->delete(
+        $table_name,
+        array('id' => $asset_id),
+        array('%d')
+    );
+    
+    if ($result === false) {
+        wqs_send_json_error('Eşya silinemedi');
+    } else {
+        wqs_send_json_success('Eşya başarıyla silindi');
+    }
+    
+    wqs_die();
+}
+add_action('wqs_ajax_odib_delete_asset', 'odib_delete_asset');
+
 // Gerekli script ve stilleri ekleyelim
 function odib_enqueue_scripts() {
-    // Debug
-    error_log('odib: Enqueuing styles and scripts');
+    // Font Awesome
+    wqs_enqueue_style('fontawesome', 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css');
     
-    $css_file = plugins_url('css/style.css', __FILE__);
-    $css_path = plugin_dir_path(__FILE__) . 'css/style.css';
+    // CSS dosyasını yükle
+    wqs_enqueue_style('odib-style', plugins_url('css/style.css', __FILE__), array(), time());
     
-    if (file_exists($css_path)) {
-        $css_version = filemtime($css_path);
-        error_log('odib: CSS file exists at: ' . $css_path);
-        error_log('odib: CSS URL will be: ' . $css_file);
-        
-        // CSS dosyasını yükle
-        wqs_enqueue_style('odib-styles', $css_file, array(), $css_version);
-    } else {
-        error_log('odib: CSS file not found at: ' . $css_path);
-    }
+    // jQuery UI
+    wqs_enqueue_script('jquery-ui-core');
+    wqs_enqueue_script('jquery-ui-sortable');
     
     // JavaScript dosyasını yükle
     wqs_enqueue_script('odib-main', plugins_url('js/main.js', __FILE__), array('jquery'), time(), true);
@@ -1893,3 +2222,15 @@ add_action('wqs_ajax_nopriv_odib_create_coin', 'odib_create_coin');
 
 add_action('wqs_ajax_odib_get_games', 'odib_get_games');
 add_action('wqs_ajax_nopriv_odib_get_games', 'odib_get_games');
+
+add_action('wqs_ajax_odib_generate_asset', 'odib_generate_asset');
+add_action('wqs_ajax_nopriv_odib_generate_asset', 'odib_generate_asset');
+
+add_action('wqs_ajax_odib_save_asset', 'odib_save_asset');
+add_action('wqs_ajax_nopriv_odib_save_asset', 'odib_save_asset');
+
+add_action('wqs_ajax_odib_get_assets', 'odib_get_assets');
+add_action('wqs_ajax_nopriv_odib_get_assets', 'odib_get_assets');
+
+add_action('wqs_ajax_odib_delete_asset', 'odib_delete_asset');
+add_action('wqs_ajax_nopriv_odib_delete_asset', 'odib_delete_asset');
