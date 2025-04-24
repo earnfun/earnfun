@@ -1059,7 +1059,7 @@ body {
     resize: vertical !important;
     min-height: 150px !important;
     transition: all 0.3s ease !important;
-    order: 1 !important;
+    font-family: 'Inter', sans-serif !important;
 }
 
 .prompt-container textarea::placeholder {
@@ -2213,4 +2213,144 @@ code, pre {
 .asset-creator .saved-item .delete-asset:hover {
     background: rgba(255, 71, 71, 0.2);
     border-color: rgba(255, 71, 71, 0.4);
+}
+
+/* Asset Type Selection Styles */
+.asset-type-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 15px;
+    margin: 15px 0;
+}
+
+.asset-type-card {
+    background: linear-gradient(145deg, #2a2a2a, #333);
+    border: 2px solid #444;
+    border-radius: 10px;
+    padding: 15px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.asset-type-card:hover {
+    transform: translateY(-3px);
+    border-color: #666;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.asset-type-card.selected {
+    border-color: #00ff9d;
+    background: linear-gradient(145deg, #1a1a1a, #2a2a2a);
+    box-shadow: 0 0 15px rgba(0, 255, 157, 0.3);
+}
+
+.asset-type-card i {
+    font-size: 24px;
+    margin-bottom: 8px;
+    display: block;
+    color: #00ff9d;
+}
+
+.asset-type-card span {
+    display: block;
+    font-size: 14px;
+    color: #fff;
+    font-weight: 500;
+}
+
+.asset-type-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+    transform: translateX(-100%);
+    transition: transform 0.6s;
+}
+
+.asset-type-card:hover::before {
+    transform: translateX(100%);
+}
+
+/* Form Group Styles */
+.form-group {
+    margin-bottom: 25px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 10px;
+    color: #fff;
+    font-size: 16px;
+    font-weight: 500;
+}
+
+/* Disabled Button and Coming Soon Badge Styles */
+.button.disabled {
+    opacity: 0.7;
+    cursor: not-allowed !important;
+    position: relative;
+    padding-right: 80px !important;
+}
+
+.button .coming-soon-badge {
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+    background: #ff3366;
+    color: white;
+    padding: 2px 8px;
+    font-size: 12px;
+    border-radius: 4px;
+    font-weight: 500;
+    text-transform: uppercase;
+}
+
+/* Game Tab Button Styles */
+.form-actions {
+    margin-top: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+.form-actions .button {
+    padding: 12px 30px;
+    font-size: 16px;
+    height: auto;
+    line-height: 1.4;
+    margin: 0 auto;
+}
+
+.form-actions .button.disabled {
+    opacity: 0.7;
+    cursor: not-allowed !important;
+    position: relative;
+    padding-right: 100px !important;
+}
+
+.form-actions .button .coming-soon-badge {
+    position: absolute;
+    top: 50%;
+    right: 15px;
+    transform: translateY(-50%);
+    background: #ff3366;
+    color: white;
+    padding: 3px 10px;
+    font-size: 12px;
+    border-radius: 4px;
+    font-weight: 500;
+    text-transform: uppercase;
+}
+
+.form-actions .button.disabled:hover {
+    transform: none;
+    background-color: #2271b1;
 }
