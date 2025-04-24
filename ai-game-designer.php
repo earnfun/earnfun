@@ -154,10 +154,10 @@ function odib_character_creator_shortcode() {
                     <div class="neon-border"></div>
                 </button>
 
-                <button class="odib-tab-card" data-tab="gallery">
+                <button class="odib-tab-card" data-tab="asset">
                     <div class="tab-content">
-                        <i class="fas fa-images"></i>
-                        <span>Galeri</span>
+                        <i class="fas fa-box"></i>
+                        <span>Asset Oluştur</span>
                     </div>
                     <div class="neon-border"></div>
                 </button>
@@ -174,14 +174,6 @@ function odib_character_creator_shortcode() {
                     <div class="tab-content">
                         <i class="fas fa-coins"></i>
                         <span>Coin Oluştur</span>
-                    </div>
-                    <div class="neon-border"></div>
-                </button>
-
-                <button class="odib-tab-card" data-tab="asset">
-                    <div class="tab-content">
-                        <i class="fas fa-box"></i>
-                        <span>Asset Oluştur</span>
                     </div>
                     <div class="neon-border"></div>
                 </button>
@@ -238,8 +230,106 @@ function odib_character_creator_shortcode() {
             <div id="result" class="odib-result"></div>
         </div>
 
-        <div id="gallery-tab" class="odib-tab-content" style="display: none;">
-            <div id="gallery" class="odib-gallery"></div>
+        <div id="asset-tab" class="odib-tab-content">
+            <div class="asset-creator">
+                <div class="creator-header">
+                    <h2>2D Oyun Eşyası Oluşturucu</h2>
+                </div>
+
+                <div class="creator-content">
+                    <div class="creator-form">
+                        <form id="create-asset-form">
+                            <?php wqs_nonce_field('odib_nonce', '_ajax_nonce'); ?>
+                            
+                            <div class="form-group">
+                                <label for="asset-type">Eşya Tipi:</label>
+                                <div class="asset-type-grid">
+                                    <div class="asset-type-card" data-value="sword">
+                                        <i class="fas fa-khanda"></i>
+                                        <span>Kılıç</span>
+                                    </div>
+                                    <div class="asset-type-card" data-value="shield">
+                                        <i class="fas fa-shield-alt"></i>
+                                        <span>Kalkan</span>
+                                    </div>
+                                    <div class="asset-type-card" data-value="potion">
+                                        <i class="fas fa-flask"></i>
+                                        <span>İksir</span>
+                                    </div>
+                                    <div class="asset-type-card" data-value="bow">
+                                        <i class="fas fa-bullseye"></i>
+                                        <span>Yay</span>
+                                    </div>
+                                    <div class="asset-type-card" data-value="staff">
+                                        <i class="fas fa-magic"></i>
+                                        <span>Asa</span>
+                                    </div>
+                                    <div class="asset-type-card" data-value="armor">
+                                        <i class="fas fa-tshirt"></i>
+                                        <span>Zırh</span>
+                                    </div>
+                                    <div class="asset-type-card" data-value="ring">
+                                        <i class="fas fa-ring"></i>
+                                        <span>Yüzük</span>
+                                    </div>
+                                    <div class="asset-type-card" data-value="amulet">
+                                        <i class="fas fa-gem"></i>
+                                        <span>Muska</span>
+                                    </div>
+                                    <div class="asset-type-card" data-value="gem">
+                                        <i class="fas fa-dice-d20"></i>
+                                        <span>Değerli Taş</span>
+                                    </div>
+                                    <div class="asset-type-card" data-value="scroll">
+                                        <i class="fas fa-scroll"></i>
+                                        <span>Tomar</span>
+                                    </div>
+                                </div>
+                                <input type="hidden" id="asset-type" name="asset_type" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="asset-description">Özellikler:</label>
+                                <textarea id="asset-description" name="description" required placeholder="Eşyanın özelliklerini detaylı bir şekilde açıklayın... Örnek: Alevli, buzlu, zehirli, antik, büyülü vb."></textarea>
+                            </div>
+                            
+                            <div class="form-group">
+                                <button type="submit" class="button button-primary">
+                                    <i class="fas fa-magic"></i> Eşya Oluştur
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="preview-section" style="display: none;">
+                        <div class="preview-header">
+                            <h3>Önizleme</h3>
+                        </div>
+                        <div class="preview-content">
+                            <div class="preview-image">
+                                <!-- Önizleme görseli buraya gelecek -->
+                            </div>
+                            <div class="preview-actions">
+                                <button class="button button-primary save-asset">
+                                    <i class="fas fa-save"></i> Kaydet
+                                </button>
+                                <button class="button regenerate-asset">
+                                    <i class="fas fa-redo"></i> Yeniden Oluştur
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="saved-section">
+                        <div class="saved-header">
+                            <h3>Kaydedilen Eşyalar</h3>
+                        </div>
+                        <div class="saved-content">
+                            <div class="saved-grid"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <div id="game-tab" class="odib-tab-content" style="display: none;">
@@ -278,14 +368,19 @@ function odib_character_creator_shortcode() {
 
                 <div class="creation-step">
                     <h3>3. Oyun Detayları</h3>
-                    <div class="prompt-container">
-                        <textarea id="game-prompt" placeholder="Oyununuzu nasıl hayal ediyorsunuz? Detayları buraya yazın..."></textarea>
+                    <div class="game-details">
+                        <textarea id="gameDetails" placeholder="Oyununuz hakkında detaylı bilgi verin..."></textarea>
                     </div>
                 </div>
 
-                <button id="preview-game" class="preview-btn">
-                    <i class="fas fa-plus"></i> Oyun Oluştur
-                </button>
+                <div class="form-actions-container">
+                    <div class="form-actions">
+                        <button type="button" class="button button-primary disabled" disabled>
+                            <i class="fas fa-gamepad"></i> Oyun Oluştur
+                            <span class="coming-soon-badge">Yakında</span>
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -352,78 +447,6 @@ function odib_character_creator_shortcode() {
                             </button>
                         </div>
                     </form>
-                </div>
-            </div>
-        </div>
-
-        <div id="asset-tab" class="odib-tab-content" style="display: none;">
-            <div class="asset-creator">
-                <div class="creator-header">
-                    <h2>2D Oyun Eşyası Oluşturucu</h2>
-                </div>
-
-                <div class="creator-content">
-                    <div class="creator-form">
-                        <form id="create-asset-form">
-                            <?php wqs_nonce_field('odib_nonce', '_ajax_nonce'); ?>
-                            
-                            <div class="form-group">
-                                <label for="asset-type">Eşya Tipi:</label>
-                                <select id="asset-type" name="asset_type" required>
-                                    <option value="">Seçiniz</option>
-                                    <option value="sword">Kılıç</option>
-                                    <option value="shield">Kalkan</option>
-                                    <option value="potion">İksir</option>
-                                    <option value="bow">Yay</option>
-                                    <option value="staff">Asa</option>
-                                    <option value="armor">Zırh</option>
-                                    <option value="ring">Yüzük</option>
-                                    <option value="amulet">Muska</option>
-                                    <option value="gem">Değerli Taş</option>
-                                    <option value="scroll">Tomar</option>
-                                </select>
-                            </div>
-                            
-                            <div class="form-group">
-                                <label for="asset-description">Özellikler:</label>
-                                <textarea id="asset-description" name="description" required placeholder="Eşyanın özelliklerini detaylı bir şekilde açıklayın... Örnek: Alevli, buzlu, zehirli, antik, büyülü vb."></textarea>
-                            </div>
-                            
-                            <div class="form-group">
-                                <button type="submit" class="button button-primary">
-                                    <i class="fas fa-magic"></i> Eşya Oluştur
-                                </button>
-                            </div>
-                        </form>
-                    </div>
-
-                    <div class="preview-section" style="display: none;">
-                        <div class="preview-header">
-                            <h3>Önizleme</h3>
-                        </div>
-                        <div class="preview-content">
-                            <div class="preview-image">
-                                <!-- Önizleme görseli buraya gelecek -->
-                            </div>
-                            <div class="preview-actions">
-                                <button class="button button-primary save-asset">
-                                    <i class="fas fa-save"></i> Kaydet
-                                </button>
-                                <button class="button regenerate-asset">
-                                    <i class="fas fa-redo"></i> Yeniden Oluştur
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="saved-section">
-                        <div class="saved-header">
-                            <h3>Kaydedilen Eşyalar</h3>
-                        </div>
-                        <div class="saved-content">
-                            <div class="saved-grid"></div>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
@@ -1700,7 +1723,6 @@ function odib_generate_prompt() {
     }
 
     $body = json_decode(wqs_remote_retrieve_body($response), true);
-    error_log('API yanıtı: ' . print_r($body, true));
     
     if (isset($body['error'])) {
         error_log('API hata mesajı: ' . $body['error']['message']);
