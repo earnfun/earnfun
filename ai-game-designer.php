@@ -237,96 +237,94 @@ function odib_character_creator_shortcode() {
                 </div>
 
                 <div class="creator-content">
-                    <div class="creator-form">
-                        <form id="create-asset-form">
-                            <?php wqs_nonce_field('odib_nonce', '_ajax_nonce'); ?>
-                            
-                            <div class="form-group">
-                                <label for="asset-type">Eşya Tipi:</label>
-                                <div class="asset-type-grid">
-                                    <div class="asset-type-card" data-value="sword">
-                                        <i class="fas fa-khanda"></i>
-                                        <span>Kılıç</span>
-                                    </div>
-                                    <div class="asset-type-card" data-value="shield">
-                                        <i class="fas fa-shield-alt"></i>
-                                        <span>Kalkan</span>
-                                    </div>
-                                    <div class="asset-type-card" data-value="potion">
-                                        <i class="fas fa-flask"></i>
-                                        <span>İksir</span>
-                                    </div>
-                                    <div class="asset-type-card" data-value="bow">
-                                        <i class="fas fa-bullseye"></i>
-                                        <span>Yay</span>
-                                    </div>
-                                    <div class="asset-type-card" data-value="staff">
-                                        <i class="fas fa-magic"></i>
-                                        <span>Asa</span>
-                                    </div>
-                                    <div class="asset-type-card" data-value="armor">
-                                        <i class="fas fa-tshirt"></i>
-                                        <span>Zırh</span>
-                                    </div>
-                                    <div class="asset-type-card" data-value="ring">
-                                        <i class="fas fa-ring"></i>
-                                        <span>Yüzük</span>
-                                    </div>
-                                    <div class="asset-type-card" data-value="amulet">
-                                        <i class="fas fa-gem"></i>
-                                        <span>Muska</span>
-                                    </div>
-                                    <div class="asset-type-card" data-value="gem">
-                                        <i class="fas fa-dice-d20"></i>
-                                        <span>Değerli Taş</span>
-                                    </div>
-                                    <div class="asset-type-card" data-value="scroll">
-                                        <i class="fas fa-scroll"></i>
-                                        <span>Tomar</span>
-                                    </div>
+                    <form id="create-asset-form">
+                        <?php wqs_nonce_field('odib_nonce', '_ajax_nonce'); ?>
+                        
+                        <div class="form-group">
+                            <label for="asset-type">Eşya Tipi:</label>
+                            <div class="asset-type-grid">
+                                <div class="asset-type-card" data-value="sword">
+                                    <i class="fas fa-khanda"></i>
+                                    <span>Kılıç</span>
                                 </div>
-                                <input type="hidden" id="asset-type" name="asset_type" required>
+                                <div class="asset-type-card" data-value="shield">
+                                    <i class="fas fa-shield-alt"></i>
+                                    <span>Kalkan</span>
+                                </div>
+                                <div class="asset-type-card" data-value="potion">
+                                    <i class="fas fa-flask"></i>
+                                    <span>İksir</span>
+                                </div>
+                                <div class="asset-type-card" data-value="bow">
+                                    <i class="fas fa-bullseye"></i>
+                                    <span>Yay</span>
+                                </div>
+                                <div class="asset-type-card" data-value="staff">
+                                    <i class="fas fa-magic"></i>
+                                    <span>Asa</span>
+                                </div>
+                                <div class="asset-type-card" data-value="armor">
+                                    <i class="fas fa-tshirt"></i>
+                                    <span>Zırh</span>
+                                </div>
+                                <div class="asset-type-card" data-value="ring">
+                                    <i class="fas fa-ring"></i>
+                                    <span>Yüzük</span>
+                                </div>
+                                <div class="asset-type-card" data-value="amulet">
+                                    <i class="fas fa-gem"></i>
+                                    <span>Muska</span>
+                                </div>
+                                <div class="asset-type-card" data-value="gem">
+                                    <i class="fas fa-dice-d20"></i>
+                                    <span>Değerli Taş</span>
+                                </div>
+                                <div class="asset-type-card" data-value="scroll">
+                                    <i class="fas fa-scroll"></i>
+                                    <span>Tomar</span>
+                                </div>
                             </div>
-                            
-                            <div class="form-group">
-                                <label for="asset-description">Özellikler:</label>
-                                <textarea id="asset-description" name="description" required placeholder="Eşyanın özelliklerini detaylı bir şekilde açıklayın... Örnek: Alevli, buzlu, zehirli, antik, büyülü vb."></textarea>
-                            </div>
-                            
-                            <div class="form-group">
-                                <button type="submit" class="button button-primary">
-                                    <i class="fas fa-magic"></i> Eşya Oluştur
-                                </button>
-                            </div>
-                        </form>
-                    </div>
+                            <input type="hidden" id="asset-type" name="asset_type" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="asset-description">Özellikler:</label>
+                            <textarea id="asset-description" name="description" required placeholder="Eşyanın özelliklerini detaylı bir şekilde açıklayın... Örnek: Alevli, buzlu, zehirli, antik, büyülü vb."></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <button type="submit" class="button button-primary">
+                                <i class="fas fa-magic"></i> Eşya Oluştur
+                            </button>
+                        </div>
+                    </form>
+                </div>
 
-                    <div class="preview-section" style="display: none;">
-                        <div class="preview-header">
-                            <h3>Önizleme</h3>
+                <div class="preview-section" style="display: none;">
+                    <div class="preview-header">
+                        <h3>Önizleme</h3>
+                    </div>
+                    <div class="preview-content">
+                        <div class="preview-image">
+                            <!-- Önizleme görseli buraya gelecek -->
                         </div>
-                        <div class="preview-content">
-                            <div class="preview-image">
-                                <!-- Önizleme görseli buraya gelecek -->
-                            </div>
-                            <div class="preview-actions">
-                                <button class="button button-primary save-asset">
-                                    <i class="fas fa-save"></i> Kaydet
-                                </button>
-                                <button class="button regenerate-asset">
-                                    <i class="fas fa-redo"></i> Yeniden Oluştur
-                                </button>
-                            </div>
+                        <div class="preview-actions">
+                            <button class="button button-primary save-asset">
+                                <i class="fas fa-save"></i> Kaydet
+                            </button>
+                            <button class="button regenerate-asset">
+                                <i class="fas fa-redo"></i> Yeniden Oluştur
+                            </button>
                         </div>
                     </div>
+                </div>
 
-                    <div class="saved-section">
-                        <div class="saved-header">
-                            <h3>Kaydedilen Eşyalar</h3>
-                        </div>
-                        <div class="saved-content">
-                            <div class="saved-grid"></div>
-                        </div>
+                <div class="saved-section">
+                    <div class="saved-header">
+                        <h3>Kaydedilen Eşyalar</h3>
+                    </div>
+                    <div class="saved-content">
+                        <div class="saved-grid"></div>
                     </div>
                 </div>
             </div>
@@ -359,7 +357,14 @@ function odib_character_creator_shortcode() {
                 </div>
 
                 <div class="creation-step">
-                    <h3>2. Karakterler</h3>
+                    <h3>2. Eşyalar</h3>
+                    <div class="asset-list">
+                        <!-- Eşyalar buraya gelecek -->
+                    </div>
+                </div>
+
+                <div class="creation-step">
+                    <h3>3. Karakterler</h3>
                     <div class="character-list"></div>
                     <div class="selected-characters">
                         <p>Henüz karakter seçilmedi</p>
@@ -367,7 +372,7 @@ function odib_character_creator_shortcode() {
                 </div>
 
                 <div class="creation-step">
-                    <h3>3. Oyun Detayları</h3>
+                    <h3>4. Oyun Detayları</h3>
                     <div class="game-details">
                         <textarea id="gameDetails" placeholder="Oyununuz hakkında detaylı bilgi verin..."></textarea>
                     </div>
@@ -385,68 +390,71 @@ function odib_character_creator_shortcode() {
         </div>
 
         <div id="coin-tab" class="odib-tab-content" style="display: none;">
-            <div class="coin-creator">
-                <div class="coin-creator__header">
-                    <h2>Coin Oluştur</h2>
-                </div>
-                <div class="coin-creator__content">
-                    <form id="coinForm" class="coin-form">
-                        <div class="form-group">
-                            <label for="coinName">Coin Adı:</label>
-                            <input type="text" id="coinName" name="coinName" required placeholder="Coin adını girin">
-                        </div>
+            <div class="game-creator">
+                <div class="creation-step">
+                    <h3>1. Coin Bilgileri</h3>
+                    <div class="form-group">
+                        <input type="text" id="coinName" name="coinName" required placeholder="Coin adını girin">
+                    </div>
                         
                         <div class="form-group">
-                            <label for="coinTicker">Ticker Sembolü:</label>
-                            <input type="text" id="coinTicker" name="coinTicker" required placeholder="Örn: BTC, ETH">
+                            <input type="text" id="coinTicker" name="coinTicker" required placeholder="Ticker sembolü (Örn: BTC, ETH)">
                         </div>
-                        
-                        <div class="form-group">
-                            <label for="coinDescription">Açıklama:</label>
-                            <textarea id="coinDescription" name="coinDescription" required placeholder="Coin hakkında detaylı açıklama"></textarea>
+                    </div>
+
+                    <div class="creation-step">
+                        <h3>2. Coin Açıklaması</h3>
+                        <div class="prompt-container">
+                            <textarea id="coinDescription" name="coinDescription" required placeholder="Coin hakkında detaylı açıklama yazın..."></textarea>
+                            <button type="button" class="dice-button" title="Rastgele açıklama oluştur">
+                                <i class="fas fa-dice"></i>
+                            </button>
                         </div>
-                        
-                        <div class="form-group">
-                            <label for="coinMedia">Coin Görseli:</label>
-                            <div class="media-upload-container">
-                                <button type="button" id="uploadMediaBtn" class="upload-btn">
-                                    <i class="fas fa-cloud-upload-alt"></i>
-                                    Görsel veya Video Yükle
-                                </button>
-                                <div id="mediaPreview" class="media-preview"></div>
-                                <input type="hidden" id="mediaUrl" name="mediaUrl">
-                            </div>
+                    </div>
+
+                    <div class="creation-step">
+                        <h3>3. Coin Görseli</h3>
+                        <div class="media-upload-container">
+                            <button type="button" id="uploadMediaBtn" class="upload-btn">
+                                <i class="fas fa-cloud-upload-alt"></i>
+                                Görsel veya Video Yükle
+                            </button>
+                            <div id="mediaPreview" class="media-preview"></div>
+                            <input type="hidden" id="mediaUrl" name="mediaUrl">
                         </div>
-                        
-                        <div class="form-group">
-                            <label for="gameSelect">Oyun Seç:</label>
+                    </div>
+
+                    <div class="creation-step">
+                        <h3>4. Oyun Seçimi</h3>
+                        <div class="game-select-container">
                             <select id="gameSelect" name="gameSelect" required>
                                 <option value="">Oyun seçin</option>
                             </select>
                         </div>
-                        
-                        <div class="form-group">
-                            <label for="distributionPercentage">Dağıtım Yüzdesi:</label>
-                            <div class="distribution-bar">
-                                <label>Dağıtım Yüzdesi</label>
-                                <div class="range-wrapper">
-                                    <input type="range" id="distributionPercentage" name="distributionPercentage" min="0" max="20" value="0" step="0.1">
-                                    <div class="value-display">0%</div>
-                                    <div class="range-labels">
-                                        <span>0%</span>
-                                        <span>20%</span>
-                                    </div>
-                                </div>
+                    </div>
+
+                    <div class="creation-step">
+                        <h3>5. Dağıtım Yüzdesi</h3>
+                        <div class="distribution-bar">
+                            <div class="range-wrapper">
+                                <input type="range" id="distributionPercentage" name="distributionPercentage" min="0" max="20" value="0" step="0.1">
+                                <div class="value-display">0%</div>
                             </div>
-                            <small class="help-text">Maximum %20'ye kadar dağıtım yapılabilir</small>
+                            <div class="range-labels">
+                                <span>0%</span>
+                                <span>20%</span>
+                            </div>
+                            <small class="help-text">Oyuncular için ayrılacak coin yüzdesi (maksimum %20)</small>
                         </div>
-                        
+                    </div>
+
+                    <div class="form-actions-container">
                         <div class="form-actions">
-                            <button type="submit" id="createCoinBtn" class="create-coin-btn">
+                            <button type="submit" class="button button-primary">
                                 <i class="fas fa-coins"></i> Coin Oluştur
                             </button>
                         </div>
-                    </form>
+                    </div>
                 </div>
             </div>
         </div>
@@ -1093,6 +1101,124 @@ function odib_character_creator_shortcode() {
     }
 
     .remove-character-btn:hover {
+        color: #bd2130;
+    }
+
+    .asset-list {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        gap: 15px;
+        margin-bottom: 20px;
+    }
+
+    .asset-card {
+        background: #fff;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        overflow: hidden;
+        transition: all 0.3s ease;
+    }
+
+    .asset-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+
+    .asset-image {
+        width: 100%;
+        height: 150px;
+        overflow: hidden;
+    }
+
+    .asset-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .asset-info {
+        padding: 15px;
+    }
+
+    .asset-info h4 {
+        margin: 0 0 10px 0;
+        color: #2271b1;
+    }
+
+    .asset-info p {
+        margin: 0;
+        font-size: 14px;
+        color: #666;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+
+    .select-asset-btn {
+        width: 100%;
+        padding: 10px;
+        border: none;
+        background: #2271b1;
+        color: white;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        transition: background 0.3s ease;
+    }
+
+    .select-asset-btn:hover {
+        background: #135e96;
+    }
+
+    .selected-assets {
+        background: #fff;
+        border: 1px dashed #ccc;
+        border-radius: 4px;
+        padding: 15px;
+        min-height: 60px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+    .selected-asset-card {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        background: white;
+        padding: 8px 12px;
+        border-radius: 6px;
+        border: 1px solid #ddd;
+    }
+
+    .selected-asset-card img {
+        width: 40px;
+        height: 40px;
+        border-radius: 4px;
+        object-fit: cover;
+    }
+
+    .selected-asset-card span {
+        font-size: 14px;
+        color: #333;
+    }
+
+    .remove-asset-btn {
+        background: none;
+        border: none;
+        color: #dc3545;
+        cursor: pointer;
+        padding: 4px;
+        margin-left: auto;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .remove-asset-btn:hover {
         color: #bd2130;
     }
     </style>
@@ -1879,7 +2005,11 @@ function odib_delete_character() {
 function odib_get_characters() {
     error_log('odib_get_characters called');
     
-    check_ajax_referer('odib-nonce', '_ajax_nonce');
+    if (!check_ajax_referer('odib-nonce', 'nonce', false)) {
+        error_log('Nonce check failed in odib_get_characters');
+        wqs_send_json_error('Güvenlik kontrolü başarısız oldu.');
+        wqs_die();
+    }
     
     global $wqsdb;
     $table_name = $wqsdb->prefix . 'odib_characters';
@@ -2127,7 +2257,10 @@ add_action('wqs_ajax_nopriv_odib_generate_asset', 'odib_generate_asset');
 
 // Asset kaydetme AJAX handler
 function odib_save_asset() {
-    check_ajax_referer('odib_nonce', 'nonce');
+    if (!check_ajax_referer('odib-nonce', 'nonce', false)) {
+        wqs_send_json_error('Güvenlik kontrolü başarısız oldu.');
+        wqs_die();
+    }
     
     global $wqsdb;
     $table_name = $wqsdb->prefix . 'odib_assets';
@@ -2160,13 +2293,31 @@ add_action('wqs_ajax_odib_save_asset', 'odib_save_asset');
 
 // Kaydedilen assetleri getirme AJAX handler
 function odib_get_assets() {
-    check_ajax_referer('odib_nonce', 'nonce');
+    error_log('odib_get_assets called');
+    
+    if (!check_ajax_referer('odib-nonce', 'nonce', false)) {
+        error_log('Nonce check failed in odib_get_assets');
+        wqs_send_json_error('Güvenlik kontrolü başarısız oldu.');
+        wqs_die();
+    }
     
     global $wqsdb;
     $table_name = $wqsdb->prefix . 'odib_assets';
     
-    $assets = $wqsdb->get_results("SELECT * FROM $table_name ORDER BY created_at DESC", ARRAY_A);
+    error_log('Querying table: ' . $table_name);
     
+    $assets = $wqsdb->get_results(
+        "SELECT * FROM $table_name ORDER BY created_at DESC",
+        ARRAY_A
+    );
+
+    if ($wqsdb->last_error) {
+        error_log('Database error: ' . $wqsdb->last_error);
+        wqs_send_json_error('Veritabanı hatası: ' . $wqsdb->last_error);
+        return;
+    }
+
+    error_log('Found ' . count($assets) . ' assets');
     wqs_send_json_success($assets);
     wqs_die();
 }
@@ -2202,6 +2353,9 @@ function odib_enqueue_scripts() {
     // Font Awesome
     wqs_enqueue_style('fontawesome', 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css');
     
+    // SweetAlert2
+    wqs_enqueue_script('sweetalert2', 'https://cdn.jsdelivr.net/npm/sweetalert2@11', array(), null, true);
+    
     // CSS dosyasını yükle
     wqs_enqueue_style('odib-style', plugins_url('css/style.css', __FILE__), array(), time());
     
@@ -2210,7 +2364,7 @@ function odib_enqueue_scripts() {
     wqs_enqueue_script('jquery-ui-sortable');
     
     // JavaScript dosyasını yükle
-    wqs_enqueue_script('odib-main', plugins_url('js/main.js', __FILE__), array('jquery'), time(), true);
+    wqs_enqueue_script('odib-main', plugins_url('js/main.js', __FILE__), array('jquery', 'sweetalert2'), time(), true);
     
     // AJAX URL'sini JavaScript'e aktar
     wqs_localize_script('odib-main', 'odibAjax', array(
