@@ -1,13 +1,23 @@
-jQuery(document).ready(function ($) {
+jQuery(document).ready(function($) {
     console.log('Document ready...');
 
+    // Initial load of assets if assets tab is active
+    if ($('#asset-tab').is(':visible')) {
+        loadAssets();
+    }
+
     // Tab değiştirme işlevi
-    $('.odib-tab-card').on('click', function () {
+    $('.odib-tab-card').on('click', function() {
         var tab = $(this).data('tab');
         $('.odib-tab-card').removeClass('active');
         $(this).addClass('active');
         $('.odib-tab-content').hide();
         $('#' + tab + '-tab').show();
+
+        // Load assets when switching to assets tab
+        if (tab === 'asset') {
+            loadAssets();
+        }
     });
 
     // Seçilen karakterleri tutacak dizi
@@ -26,7 +36,7 @@ jQuery(document).ready(function ($) {
                 action: 'odib_get_characters',
                 _ajax_nonce: odibAjax.nonce
             },
-            success: function (response) {
+            success: function(response) {
                 console.log('AJAX Response:', response);
                 if (response.success) {
                     const characters = response.data;
@@ -47,17 +57,17 @@ jQuery(document).ready(function ($) {
                     });
 
                     // Karakter kartlarına tıklama olayı ekle
-                    $('.character-card').on('click', function () {
+                    $('.character-card').on('click', function() {
                         const characterId = parseInt($(this).data('id'));
                         const characterName = $(this).find('h4').text();
                         const characterImage = $(this).find('img').attr('src');
-
+                        
                         console.log('Clicked character:', characterId, characterName);
                         console.log('Current element:', $(this));
-
+                        
                         // Seçim durumunu değiştir
                         $(this).toggleClass('selected');
-
+                        
                         if ($(this).hasClass('selected')) {
                             // Karakter seçildi
                             selectedCharacters.push({
@@ -71,7 +81,7 @@ jQuery(document).ready(function ($) {
                             selectedCharacters = selectedCharacters.filter(char => char.id !== characterId);
                             console.log('Character deselected:', characterId);
                         }
-
+                        
                         console.log('Selected characters:', selectedCharacters);
                         updateSelectedCharacters();
                     });
@@ -81,7 +91,7 @@ jQuery(document).ready(function ($) {
                     console.error('Failed to load characters:', response.data);
                 }
             },
-            error: function (xhr, status, error) {
+            error: function(xhr, status, error) {
                 console.error('AJAX Error:', error);
                 console.error('Status:', status);
                 console.error('Response:', xhr.responseText);
@@ -114,21 +124,21 @@ jQuery(document).ready(function ($) {
                 </div>
             `);
 
-            selectedCharacterElement.find('.remove-character').on('click', function (e) {
+            selectedCharacterElement.find('.remove-character').on('click', function(e) {
                 e.stopPropagation();
                 const idToRemove = parseInt($(this).data('id'));
-
+                
                 console.log('Removing character:', idToRemove);
-
+                
                 // Seçili karakterlerden kaldır
                 selectedCharacters = selectedCharacters.filter(char => char.id !== idToRemove);
-
+                
                 // Karakter kartından selected sınıfını kaldır
                 $(`.character-card[data-id="${idToRemove}"]`).removeClass('selected');
-
+                
                 console.log('Character removed:', idToRemove);
                 console.log('Remaining characters:', selectedCharacters);
-
+                
                 updateSelectedCharacters();
             });
 
@@ -140,25 +150,25 @@ jQuery(document).ready(function ($) {
     }
 
     // Oyun türü seçimi
-    $('.type-btn').on('click', function () {
+    $('.type-btn').on('click', function() {
         $('.type-btn').removeClass('selected');
         $(this).addClass('selected');
-
+        
         // Sonraki adıma geçiş
         $('.creation-step').removeClass('active');
         $('#characters-step').addClass('active');
-
+        
         // Seçilen oyun türünü sakla
         const selectedType = $(this).data('type');
         $('#selected-game-type').val(selectedType);
-
+        
         console.log('Selected game type:', selectedType);
     });
 
     // Prompt oluşturma
-    $('#generate-prompt').on('click', function () {
+    $('#generate-prompt').on('click', function() {
         const promptText = $('#character-prompt').val();
-
+        
         $.ajax({
             url: odibAjax.ajaxurl,
             type: 'POST',
@@ -167,27 +177,27 @@ jQuery(document).ready(function ($) {
                 prompt: promptText,
                 _ajax_nonce: odibAjax.nonce
             },
-            beforeSend: function () {
+            beforeSend: function() {
                 $('#generate-prompt').prop('disabled', true).text('Oluşturuluyor...');
             },
-            success: function (response) {
+            success: function(response) {
                 if (response.success) {
                     $('#character-prompt').val(response.data);
                 } else {
                     alert('Prompt oluşturulurken bir hata oluştu: ' + response.data);
                 }
             },
-            complete: function () {
+            complete: function() {
                 $('#generate-prompt').prop('disabled', false).text('Prompt Oluştur');
             }
         });
     });
 
     // Önizleme oluşturma
-    $('#create-preview').on('click', function () {
+    $('#create-preview').on('click', function() {
         const characterName = $('#character-name').val();
         const promptText = $('#character-prompt').val();
-
+        
         if (!characterName || !promptText) {
             alert('Lütfen karakter adı ve prompt alanlarını doldurun.');
             return;
@@ -202,11 +212,11 @@ jQuery(document).ready(function ($) {
                 prompt: promptText,
                 _ajax_nonce: odibAjax.nonce
             },
-            beforeSend: function () {
+            beforeSend: function() {
                 $('#create-preview').prop('disabled', true).text('Oluşturuluyor...');
                 $('#preview-image').html('<div class="loading">Yükleniyor...</div>');
             },
-            success: function (response) {
+            success: function(response) {
                 if (response.success) {
                     $('#preview-image').html(`<img src="${response.data}" alt="${characterName}">`);
                 } else {
@@ -214,18 +224,18 @@ jQuery(document).ready(function ($) {
                     $('#preview-image').empty();
                 }
             },
-            complete: function () {
+            complete: function() {
                 $('#create-preview').prop('disabled', false).text('Önizleme Oluştur');
             }
         });
     });
 
     // Karakteri kaydetme
-    $('#save-character').on('click', function () {
+    $('#save-character').on('click', function() {
         const characterName = $('#character-name').val();
         const promptText = $('#character-prompt').val();
         const previewImage = $('#preview-image img').attr('src');
-
+        
         if (!characterName || !promptText || !previewImage) {
             alert('Lütfen tüm alanları doldurun ve bir önizleme oluşturun.');
             return;
@@ -241,10 +251,10 @@ jQuery(document).ready(function ($) {
                 image_url: previewImage,
                 _ajax_nonce: odibAjax.nonce
             },
-            beforeSend: function () {
+            beforeSend: function() {
                 $('#save-character').prop('disabled', true).text('Kaydediliyor...');
             },
-            success: function (response) {
+            success: function(response) {
                 if (response.success) {
                     alert('Karakter başarıyla kaydedildi!');
                     $('#character-name').val('');
@@ -255,16 +265,16 @@ jQuery(document).ready(function ($) {
                     alert('Karakter kaydedilirken bir hata oluştu: ' + response.data);
                 }
             },
-            complete: function () {
+            complete: function() {
                 $('#save-character').prop('disabled', false).text('Karakteri Kaydet');
             }
         });
     });
 
     // Oyun konsepti oluşturma
-    $('#generate-concept').on('click', function () {
+    $('#generate-concept').on('click', function() {
         const gameIdea = $('#game-idea').val();
-
+        
         if (!gameIdea) {
             alert('Lütfen bir oyun fikri girin.');
             return;
@@ -278,50 +288,50 @@ jQuery(document).ready(function ($) {
                 idea: gameIdea,
                 _ajax_nonce: odibAjax.nonce
             },
-            beforeSend: function () {
+            beforeSend: function() {
                 $('#generate-concept').prop('disabled', true).text('Oluşturuluyor...');
                 $('.concept-section').hide().find('.content').empty();
             },
-            success: function (response) {
+            success: function(response) {
                 if (response.success) {
                     const concept = response.data;
-
+                    
                     // Her bölümü doldur ve göster
                     $('.mechanics .content').html(concept.mechanics);
                     $('.level-design .content').html(concept.level_design);
                     $('.progression .content').html(concept.progression);
                     $('.visuals .content').html(concept.visuals);
-
+                    
                     $('.concept-section').fadeIn();
                 } else {
                     alert('Konsept oluşturulurken bir hata oluştu: ' + response.data);
                 }
             },
-            complete: function () {
+            complete: function() {
                 $('#generate-concept').prop('disabled', false).text('Konsept Oluştur');
             }
         });
     });
 
     // Dağıtım yüzdesi barı için event listener
-    $('.distribution-bar input[type="range"]').on('input', function () {
+    $('.distribution-bar input[type="range"]').on('input', function() {
         const value = $(this).val();
         const valueDisplay = $(this).siblings('.value-display');
-
+        
         // Değer göstergesini güncelle
         valueDisplay.text(parseFloat(value).toFixed(1) + '%');
-
+        
         // Değer göstergesinin pozisyonunu ayarla
         const percent = (value - $(this).attr('min')) / ($(this).attr('max') - $(this).attr('min'));
         const thumbOffset = 18; // thumb genişliği
         const trackWidth = $(this).width() - thumbOffset;
         const newqsosition = (trackWidth * percent) + (thumbOffset / 2);
-
+        
         valueDisplay.css('left', newqsosition + 'px');
     }).trigger('input'); // Sayfa yüklendiğinde değeri göster
 
     // Mouse bırakıldığında vurgulamayı kaldır
-    $('.distribution-bar input[type="range"]').on('mouseup touchend', function () {
+    $('.distribution-bar input[type="range"]').on('mouseup touchend', function() {
         $(this).siblings('.value-display').removeClass('active');
     });
 
@@ -333,9 +343,9 @@ jQuery(document).ready(function ($) {
             type: 'POST',
             data: {
                 action: 'odib_get_assets',
-                nonce: odibAjax.nonce
+                _ajax_nonce: odibAjax.nonce
             },
-            success: function (response) {
+            success: function(response) {
                 if (response.success) {
                     const assets = response.data;
                     const assetList = $('.saved-grid');
@@ -363,30 +373,30 @@ jQuery(document).ready(function ($) {
                     console.error('Failed to load assets:', response.data);
                 }
             },
-            error: function (xhr, status, error) {
+            error: function(xhr, status, error) {
                 console.error('AJAX Error:', error);
             }
         });
     }
 
     // Asset type selection
-    $('.asset-type-card').on('click', function () {
+    $('.asset-type-card').on('click', function() {
         const selectedValue = $(this).data('value');
         $('#asset-type').val(selectedValue);
-
+        
         // Update visual selection
         $('.asset-type-card').removeClass('selected');
         $(this).addClass('selected');
     });
 
     // Asset oluşturma formu gönderimi
-    $('#create-asset-form').on('submit', function (e) {
+    $('#create-asset-form').on('submit', function(e) {
         e.preventDefault();
-
+        
         const assetType = $('#asset-type').val();
         const description = $('#asset-description').val();
         const nonce = $('#_ajax_nonce').val();
-
+        
         if (!assetType || !description) {
             Swal.fire({
                 title: 'Hata!',
@@ -396,10 +406,10 @@ jQuery(document).ready(function ($) {
             });
             return;
         }
-
+        
         const submitButton = $(this).find('button[type="submit"]');
         submitButton.prop('disabled', true).html('<i class="fas fa-spinner fa-spin"></i> Eşya Oluşturuluyor...');
-
+        
         $.ajax({
             url: odibAjax.ajaxurl,
             type: 'POST',
@@ -409,11 +419,11 @@ jQuery(document).ready(function ($) {
                 description: description,
                 _ajax_nonce: nonce
             },
-            success: function (response) {
+            success: function(response) {
                 if (response.success) {
                     $('.preview-section').show();
                     $('.preview-image').html(`<img src="${response.data.image_url}" alt="Eşya önizleme">`);
-
+                    
                     // Asset verilerini kaydet
                     const assetData = {
                         asset_type: assetType,
@@ -421,14 +431,14 @@ jQuery(document).ready(function ($) {
                         image_url: response.data.image_url,
                         prompt: response.data.prompt
                     };
-
+                    
                     // Kaydet butonuna tıklandığında
-                    $('.save-asset').off('click').on('click', function () {
+                    $('.save-asset').off('click').on('click', function() {
                         saveAsset(assetData);
                     });
-
+                    
                     // Yeniden oluştur butonuna tıklandığında
-                    $('.regenerate-asset').off('click').on('click', function () {
+                    $('.regenerate-asset').off('click').on('click', function() {
                         $('#create-asset-form').submit();
                     });
 
@@ -448,7 +458,7 @@ jQuery(document).ready(function ($) {
                     });
                 }
             },
-            error: function (xhr, status, error) {
+            error: function(xhr, status, error) {
                 console.error('AJAX Error:', error);
                 Swal.fire({
                     title: 'Hata!',
@@ -457,7 +467,7 @@ jQuery(document).ready(function ($) {
                     confirmButtonText: 'Tamam'
                 });
             },
-            complete: function () {
+            complete: function() {
                 submitButton.prop('disabled', false).html('<i class="fas fa-magic"></i> Eşya Oluştur');
             }
         });
@@ -476,7 +486,7 @@ jQuery(document).ready(function ($) {
                 prompt: assetData.prompt,
                 nonce: odibAjax.nonce
             },
-            success: function (response) {
+            success: function(response) {
                 if (response.success) {
                     Swal.fire({
                         title: 'Başarılı!',
@@ -495,7 +505,7 @@ jQuery(document).ready(function ($) {
                     });
                 }
             },
-            error: function (xhr, status, error) {
+            error: function(xhr, status, error) {
                 console.error('AJAX Error:', error);
                 Swal.fire({
                     title: 'Hata!',
@@ -508,9 +518,9 @@ jQuery(document).ready(function ($) {
     }
 
     // Kaydedilen asseti silme
-    $(document).on('click', '.delete-asset', function () {
+    $(document).on('click', '.delete-asset', function() {
         const assetId = $(this).data('id');
-
+        
         Swal.fire({
             title: 'Emin misiniz?',
             text: 'Bu eşyayı silmek istediğinizden emin misiniz?',
@@ -529,7 +539,7 @@ jQuery(document).ready(function ($) {
                         asset_id: assetId,
                         nonce: odibAjax.nonce
                     },
-                    success: function (response) {
+                    success: function(response) {
                         if (response.success) {
                             Swal.fire(
                                 'Silindi!',
@@ -545,7 +555,7 @@ jQuery(document).ready(function ($) {
                             );
                         }
                     },
-                    error: function (xhr, status, error) {
+                    error: function(xhr, status, error) {
                         console.error('AJAX Error:', error);
                         Swal.fire(
                             'Hata!',
@@ -558,12 +568,100 @@ jQuery(document).ready(function ($) {
         });
     });
 
+    // Seçilen eşyaları tutacak dizi
+    let selectedGameAssets = [];
+
+    // Eşya listesini yükle
+    function loadGameAssets() {
+        $.ajax({
+            url: odibAjax.ajaxurl,
+            type: 'POST',
+            data: {
+                action: 'odib_get_assets',
+                _ajax_nonce: odibAjax.nonce
+            },
+            success: function(response) {
+                if (response.success) {
+                    const assetList = $('.asset-list');
+                    assetList.empty();
+                    
+                    response.data.forEach(asset => {
+                        const assetCard = $(`
+                            <div class="asset-card" data-id="${asset.id}">
+                                <div class="asset-image">
+                                    <img src="${asset.image_url}" alt="${asset.asset_type}">
+                                </div>
+                                <div class="asset-info">
+                                    <h4>${asset.asset_type}</h4>
+                                    <p>${asset.description}</p>
+                                </div>
+                            </div>
+                        `);
+                        assetList.append(assetCard);
+                    });
+
+                    // Eşya seçme işlevi
+                    $(document).off('click', '.asset-card').on('click', '.asset-card', function(e) {
+                        e.preventDefault();
+                        const card = $(this);
+                        card.toggleClass('selected');
+                        
+                        // Oyun oluştur butonunu aktif et
+                        const selectedCount = $('.asset-card.selected').length;
+                        $('#createGameBtn').prop('disabled', selectedCount === 0);
+                    });
+                }
+            }
+        });
+    }
+
+    // Seçili eşyaları güncelle
+    function updateSelectedGameAssets() {
+        const selectedAssetsContainer = $('.selected-assets');
+        selectedAssetsContainer.empty();
+
+        if (selectedGameAssets.length === 0) {
+            selectedAssetsContainer.html('<p>Henüz eşya seçilmedi</p>');
+            return;
+        }
+
+        selectedGameAssets.forEach(asset => {
+            const selectedAssetCard = $(`
+                <div class="selected-asset-card" data-id="${asset.id}">
+                    <img src="${asset.image}" alt="${asset.description}">
+                    <span>${asset.type}</span>
+                    <button class="remove-asset-btn">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            `);
+            selectedAssetsContainer.append(selectedAssetCard);
+        });
+
+        // Eşya kaldırma butonuna tıklama olayı
+        $('.remove-asset-btn').on('click', function() {
+            const assetId = $(this).closest('.selected-asset-card').data('id');
+            selectedGameAssets = selectedGameAssets.filter(a => a.id !== assetId);
+            updateSelectedGameAssets();
+        });
+    }
+
+    // Oyun sekmesine geçildiğinde eşyaları yükle
+    $('.odib-tab-card[data-tab="game"]').on('click', function() {
+        loadGameAssets();
+    });
+
+    // Sayfa yüklendiğinde oyun sekmesi aktifse eşyaları yükle
+    if ($('#game-tab').is(':visible')) {
+        loadGameAssets();
+    }
+
     // Sayfa yüklendiğinde karakter listesini yükle
     console.log('Initializing character loading...');
     loadCharacters();
     loadCoins();
     loadGames();
-
+    
     // İlk yüklemede asset listesini yükle
     loadAssets();
 
