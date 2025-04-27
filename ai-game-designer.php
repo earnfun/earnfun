@@ -138,7 +138,7 @@ function odib_character_creator_shortcode() {
 
         <div class="odib-tabs-wrapper">
             <div class="odib-tabs">
-                <button class="odib-tab-card" data-tab="concept">
+                <button class="odib-tab-card active" data-tab="concept">
                     <div class="tab-content">
                         <i class="fas fa-lightbulb"></i>
                         <span>Oyun Konsepti</span>
@@ -146,7 +146,7 @@ function odib_character_creator_shortcode() {
                     <div class="neon-border"></div>
                 </button>
 
-                <button class="odib-tab-card active" data-tab="creator">
+                <button class="odib-tab-card" data-tab="creator">
                     <div class="tab-content">
                         <i class="fas fa-user-astronaut"></i>
                         <span>Karakter Oluştur</span>
@@ -180,7 +180,7 @@ function odib_character_creator_shortcode() {
             </div>
         </div>
 
-        <div id="concept-tab" class="odib-tab-content" style="display: none;">
+        <div id="concept-tab" class="odib-tab-content">
             <div class="odib-form">
                 <div class="odib-input-group">
                     <label for="game-idea">Oyun Fikriniz:</label>
@@ -208,7 +208,7 @@ function odib_character_creator_shortcode() {
             </div>
         </div>
 
-        <div id="creator-tab" class="odib-tab-content">
+        <div id="creator-tab" class="odib-tab-content" style="display: none;">
             <div class="odib-form">
                 <div class="odib-input-group">
                     <label for="character-name">Karakter Adı:</label>
@@ -230,7 +230,7 @@ function odib_character_creator_shortcode() {
             <div id="result" class="odib-result"></div>
         </div>
 
-        <div id="asset-tab" class="odib-tab-content">
+        <div id="asset-tab" class="odib-tab-content" style="display: none;">
             <div class="asset-creator">
                 <div class="creator-header">
                     <h2>2D Oyun Eşyası Oluşturucu</h2>
@@ -415,12 +415,30 @@ function odib_character_creator_shortcode() {
                     <div class="creation-step">
                         <h3>3. Coin Görseli</h3>
                         <div class="media-upload-container">
-                            <button type="button" id="uploadMediaBtn" class="upload-btn">
-                                <i class="fas fa-cloud-upload-alt"></i>
-                                Görsel veya Video Yükle
-                            </button>
-                            <div id="mediaPreview" class="media-preview"></div>
-                            <input type="hidden" id="mediaUrl" name="mediaUrl">
+                            <div class="upload-options">
+                                <label class="upload-option">
+                                    <input type="file" id="coinImageFile" accept="image/*" class="file-input">
+                                    <div class="upload-content">
+                                        <i class="fas fa-upload"></i>
+                                        <span>Bilgisayardan Yükle</span>
+                                        <small>PNG, JPG veya GIF (Max 2MB)</small>
+                                    </div>
+                                </label>
+                                <div class="upload-divider">
+                                    <span>veya</span>
+                                </div>
+                                <button type="button" id="generateCoinImage" class="ai-generate-btn">
+                                    <i class="fas fa-magic"></i>
+                                    <span>AI ile Oluştur</span>
+                                </button>
+                            </div>
+                            <div id="coinImagePreview" class="image-preview">
+                                <div class="preview-placeholder">
+                                    <i class="fas fa-image"></i>
+                                    <span>Görsel Önizleme</span>
+                                </div>
+                            </div>
+                            <input type="hidden" id="coinImageUrl" name="coinImageUrl">
                         </div>
                     </div>
 
@@ -1241,6 +1259,25 @@ function odib_character_creator_shortcode() {
             }
         });
 
+        // Show concept tab by default
+        $('.odib-tab-content').hide();
+        $('#concept-tab').show();
+
+        // Tab switching functionality
+        $('.odib-tab-card').on('click', function() {
+            const tabId = $(this).data('tab');
+            
+            // Remove active class from all tabs
+            $('.odib-tab-card').removeClass('active');
+            // Add active class to clicked tab
+            $(this).addClass('active');
+            
+            // Hide all tab contents
+            $('.odib-tab-content').hide();
+            // Show selected tab content
+            $(`#${tabId}-tab`).show();
+        });
+        
         // Generate prompt
         $('#generate-prompt').on('click', function() {
             const $button = $(this);
@@ -1755,46 +1792,67 @@ function odib_character_creator_shortcode() {
     </script>
 
     <script>
-        jQuery(document).ready(function($) {
-            $('#generate-concept').on('click', function() {
-                var button = $(this);
-                var gameIdea = $('#game-idea').val();
-                if (!gameIdea) {
-                    alert('Lütfen bir oyun fikri girin.');
+    jQuery(document).ready(function($) {
+        // Coin image upload handling
+        const coinImageFile = $('#coinImageFile');
+        const coinImagePreview = $('#coinImagePreview');
+        const uploadContent = $('.upload-content');
+        const generateBtn = $('#generateCoinImage');
+        
+        // File input change handler
+        coinImageFile.on('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                if (file.size > 2 * 1024 * 1024) { // 2MB limit
+                    alert('Dosya boyutu 2MB\'dan küçük olmalıdır.');
                     return;
                 }
-
-                // Loading durumunu göster
-                button.addClass('loading');
-                $('.concept-section').hide();
-
-                $.ajax({
-                    url: odib_ajax.ajax_url,
-                    type: 'POST',
-                    data: {
-                        action: 'odib_generate_concept',
-                        game_idea: gameIdea
-                    },
-                    success: function(response) {
-                        // Loading durumunu kaldır
-                        button.removeClass('loading');
-                        
-                        if (response.success) {
-                            $('.mechanics .content').html(response.data.mechanics);
-                            $('.level-design .content').html(response.data.level_design);
-                            $('.concept-section').fadeIn();
-                        } else {
-                            alert('Bir hata oluştu. Lütfen tekrar deneyin.');
-                        }
-                    },
-                    error: function() {
-                        // Loading durumunu kaldır
-                        button.removeClass('loading');
-                        alert('Bir hata oluştu. Lütfen tekrar deneyin.');
-                    }
-                });
-            });
+                
+                if (!file.type.startsWith('image/')) {
+                    alert('Lütfen geçerli bir görsel dosyası seçin.');
+                    return;
+                }
+                
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    coinImagePreview.html(`<img src="${e.target.result}" alt="Coin görsel önizleme">`);
+                    $('#coinImageUrl').val(e.target.result);
+                };
+                reader.readAsDataURL(file);
+            }
         });
+        
+        // Drag and drop handling
+        uploadContent.on('dragenter dragover', function(e) {
+            e.preventDefault();
+            $(this).addClass('drag-over');
+        });
+        
+        uploadContent.on('dragleave drop', function(e) {
+            e.preventDefault();
+            $(this).removeClass('drag-over');
+        });
+        
+        uploadContent.on('drop', function(e) {
+            e.preventDefault();
+            const file = e.originalEvent.dataTransfer.files[0];
+            if (file) {
+                coinImageFile[0].files = e.originalEvent.dataTransfer.files;
+                coinImageFile.trigger('change');
+            }
+        });
+        
+        // AI Generate button click handler
+        generateBtn.on('click', function() {
+            // AI görsel oluşturma fonksiyonunu burada çağırabilirsiniz
+            $(this).addClass('loading');
+            // Örnek olarak 2 saniye sonra loading'i kaldıralım
+            setTimeout(() => {
+                $(this).removeClass('loading');
+                // Burada AI ile görsel oluşturma işlemini yapabilirsiniz
+            }, 2000);
+        });
+    });
     </script>
 
     <?php
