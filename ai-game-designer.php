@@ -4,7 +4,7 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-// Eklenti aktifleştirildiğinde çalışacak fonksiyon
+// Function to run when the plugin is activated
 function odib_activate() {
     global $wqsdb;
     
@@ -38,12 +38,10 @@ function odib_activate() {
 }
 register_activation_hook(__FILE__, 'odib_activate');
 
-// Gerekli sabitleri tanımlayalım
 define('odib_VERSION', '1.0.0');
 define('odib_PLUGIN_DIR', plugin_dir_path(__FILE__));
 define('odib_PLUGIN_URL', plugin_dir_url(__FILE__));
 
-// Veritabanı tablosunu oluştur
 function odib_create_tables() {
     global $wqsdb;
     $charset_collate = $wqsdb->get_charset_collate();
@@ -88,7 +86,7 @@ function odib_add_admin_menu() {
 }
 add_action('admin_menu', 'odib_add_admin_menu');
 
-// Ayarlar sayfası içeriği
+// Settings sayfası içeriği
 function odib_settings_page() {
     if (isset($_POST['odib_save_settings'])) {
         if (isset($_POST['odib_openai_api_key'])) {
@@ -99,19 +97,19 @@ function odib_settings_page() {
     $api_key = get_option('odib_openai_api_key', '');
     ?>
     <div class="wrap">
-        <h1>AI Game Designer Ayarları</h1>
+        <h1>AI Game Designer Settings</h1>
         <form method="post">
             <table class="form-table">
                 <tr>
-                    <th scope="row">OpenAI API Anahtarı</th>
+                    <th scope="row">OpenAI API Key</th>
                     <td>
                         <input type="text" name="odib_openai_api_key" value="<?php echo esc_attr($api_key); ?>" class="regular-text">
-                        <p class="description">OpenAI API anahtarınızı buraya girin.</p>
+                        <p class="description">Enter your OpenAI API Key.</p>
                     </td>
                 </tr>
             </table>
             <p class="submit">
-                <input type="submit" name="odib_save_settings" class="button-primary" value="Ayarları Kaydet">
+                <input type="submit" name="odib_save_settings" class="button-primary" value="Save Settings">
             </p>
         </form>
     </div>
@@ -132,7 +130,7 @@ function odib_character_creator_shortcode() {
                     <h1>AI Game Designer</h1>
                     <div class="created-by">by <span class="brand-text"><span class="earn">EARN</span><span class="fun">.fun</span></span></div>
                 </div>
-                <p>Yapay zeka destekli oyun tasarım aracı ile hayal ettiğiniz oyunu kolayca oluşturun. Karakterler, hikayeler ve oyun mekanikleri için AI'dan ilham alın.</p>
+                <p>Create your dream game easily with an AI-powered game design tool. Get inspired by EARN.fun's AI for characters, stories, and game mechanics.</p>
             </div>
         </div>
 
@@ -141,7 +139,7 @@ function odib_character_creator_shortcode() {
                 <button class="odib-tab-card active" data-tab="concept">
                     <div class="tab-content">
                         <i class="fas fa-lightbulb"></i>
-                        <span>Oyun Konsepti</span>
+                        <span>Game Concept</span>
                     </div>
                     <div class="neon-border"></div>
                 </button>
@@ -149,7 +147,7 @@ function odib_character_creator_shortcode() {
                 <button class="odib-tab-card" data-tab="creator">
                     <div class="tab-content">
                         <i class="fas fa-user-astronaut"></i>
-                        <span>Karakter Oluştur</span>
+                        <span>Create Character</span>
                     </div>
                     <div class="neon-border"></div>
                 </button>
@@ -157,7 +155,7 @@ function odib_character_creator_shortcode() {
                 <button class="odib-tab-card" data-tab="asset">
                     <div class="tab-content">
                         <i class="fas fa-box"></i>
-                        <span>Asset Oluştur</span>
+                        <span>Create Asset</span>
                     </div>
                     <div class="neon-border"></div>
                 </button>
@@ -165,7 +163,7 @@ function odib_character_creator_shortcode() {
                 <button class="odib-tab-card" data-tab="game">
                     <div class="tab-content">
                         <i class="fas fa-gamepad"></i>
-                        <span>Oyun Oluştur</span>
+                        <span>Create Game</span>
                     </div>
                     <div class="neon-border"></div>
                 </button>
@@ -173,7 +171,7 @@ function odib_character_creator_shortcode() {
                 <button class="odib-tab-card" data-tab="coin">
                     <div class="tab-content">
                         <i class="fas fa-coins"></i>
-                        <span>Coin Oluştur</span>
+                        <span>Create Coin</span>
                     </div>
                     <div class="neon-border"></div>
                 </button>
@@ -183,27 +181,51 @@ function odib_character_creator_shortcode() {
         <div id="concept-tab" class="odib-tab-content">
             <div class="odib-form">
                 <div class="odib-input-group">
-                    <label for="game-idea">Oyun Fikriniz:</label>
-                    <textarea id="game-idea" rows="3" placeholder="Örnek: Kullanıcı engelleri aşan bir tavşan oyunu yapalım"></textarea>
+                    <label for="game-idea">Game Idea:</label>
+                    <textarea id="game-idea" rows="3" placeholder="Example: A platformer game with a rabbit character"></textarea>
                 </div>
-                <button id="generate-concept">Konsept Oluştur</button>
+                <button id="generate-concept">
+                    <i class="fas fa-wand-magic-sparkles"></i>
+                    <span>Generate Concept</span>
+                    <i class="fas fa-lightbulb"></i>
+                </button>
             </div>
             <div id="concept-result" class="concept-result">
                 <div class="concept-section mechanics" style="display: none;">
-                    <h3>🎮 Oyun Mekanikleri</h3>
-                    <div class="content"></div>
+                    <div class="concept-card">
+                        <div class="concept-icon">
+                            <i class="fas fa-gamepad"></i>
+                        </div>
+                        <h3>Game Mechanics</h3>
+                        <div class="content"></div>
+                    </div>
                 </div>
                 <div class="concept-section level-design" style="display: none;">
-                    <h3>🏗️ Bölüm Tasarımı</h3>
-                    <div class="content"></div>
+                    <div class="concept-card">
+                        <div class="concept-icon">
+                            <i class="fas fa-layer-group"></i>
+                        </div>
+                        <h3>Level Design</h3>
+                        <div class="content"></div>
+                    </div>
                 </div>
                 <div class="concept-section progression" style="display: none;">
-                    <h3>📈 İlerleme Sistemi</h3>
-                    <div class="content"></div>
+                    <div class="concept-card">
+                        <div class="concept-icon">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <h3>Progression System</h3>
+                        <div class="content"></div>
+                    </div>
                 </div>
                 <div class="concept-section visuals" style="display: none;">
-                    <h3>🎨 Görsel Stil</h3>
-                    <div class="content"></div>
+                    <div class="concept-card">
+                        <div class="concept-icon">
+                            <i class="fas fa-palette"></i>
+                        </div>
+                        <h3>Visual Style</h3>
+                        <div class="content"></div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -211,20 +233,23 @@ function odib_character_creator_shortcode() {
         <div id="creator-tab" class="odib-tab-content" style="display: none;">
             <div class="odib-form">
                 <div class="odib-input-group">
-                    <label for="character-name">Karakter Adı:</label>
+                    <label for="character-name">Character Name:</label>
                     <input type="text" id="character-name" required>
                 </div>
                 
                 <div class="odib-input-group">
-                    <label for="character-prompt">Karakter Prompt:</label>
+                    <label for="character-prompt">Character Description:</label>
                     <div class="prompt-container">
                         <textarea id="character-prompt" rows="4" required></textarea>
-                        <button id="generate-prompt" class="dice-button" title="Random Prompt Oluştur">🎲</button>
+                        <button id="generate-prompt" class="dice-button" title="Generate Random Description">🎲</button>
                     </div>
-                    <small>Kendi promptunuzu yazabilir veya zar butonuna tıklayarak rastgele bir prompt oluşturabilirsiniz.</small>
+                    <small>Write your own description or click the dice button to generate a random one.</small>
                 </div>
 
-                <button id="preview-character">Karakterleri Oluştur</button>
+                <div class="button-container">
+                    <button id="preview-character"><i class="fas fa-robot"></i> Generate Characters</button>
+                </div>
+
             </div>
 
             <div id="result" class="odib-result"></div>
@@ -233,7 +258,7 @@ function odib_character_creator_shortcode() {
         <div id="asset-tab" class="odib-tab-content" style="display: none;">
             <div class="asset-creator">
                 <div class="creator-header">
-                    <h2>2D Oyun Eşyası Oluşturucu</h2>
+                    <h2>2D Game Asset Creator</h2>
                 </div>
 
                 <div class="creator-content">
@@ -241,60 +266,60 @@ function odib_character_creator_shortcode() {
                         <?php wqs_nonce_field('odib_nonce', '_ajax_nonce'); ?>
                         
                         <div class="form-group">
-                            <label for="asset-type">Eşya Tipi:</label>
+                            <label for="asset-type">Asset Type:</label>
                             <div class="asset-type-grid">
                                 <div class="asset-type-card" data-value="sword">
                                     <i class="fas fa-khanda"></i>
-                                    <span>Kılıç</span>
+                                    <span>Sword</span>
                                 </div>
                                 <div class="asset-type-card" data-value="shield">
                                     <i class="fas fa-shield-alt"></i>
-                                    <span>Kalkan</span>
+                                    <span>Shield</span>
                                 </div>
                                 <div class="asset-type-card" data-value="potion">
                                     <i class="fas fa-flask"></i>
-                                    <span>İksir</span>
+                                    <span>Potion</span>
                                 </div>
                                 <div class="asset-type-card" data-value="bow">
                                     <i class="fas fa-bullseye"></i>
-                                    <span>Yay</span>
+                                    <span>Bow</span>
                                 </div>
                                 <div class="asset-type-card" data-value="staff">
                                     <i class="fas fa-magic"></i>
-                                    <span>Asa</span>
+                                    <span>Staff</span>
                                 </div>
                                 <div class="asset-type-card" data-value="armor">
                                     <i class="fas fa-tshirt"></i>
-                                    <span>Zırh</span>
+                                    <span>Armor</span>
                                 </div>
                                 <div class="asset-type-card" data-value="ring">
                                     <i class="fas fa-ring"></i>
-                                    <span>Yüzük</span>
+                                    <span>Ring</span>
                                 </div>
                                 <div class="asset-type-card" data-value="amulet">
                                     <i class="fas fa-gem"></i>
-                                    <span>Muska</span>
+                                    <span>Amulet</span>
                                 </div>
                                 <div class="asset-type-card" data-value="gem">
                                     <i class="fas fa-dice-d20"></i>
-                                    <span>Değerli Taş</span>
+                                    <span>Gem</span>
                                 </div>
                                 <div class="asset-type-card" data-value="scroll">
                                     <i class="fas fa-scroll"></i>
-                                    <span>Tomar</span>
+                                    <span>Scroll</span>
                                 </div>
                             </div>
                             <input type="hidden" id="asset-type" name="asset_type" required>
                         </div>
                         
                         <div class="form-group">
-                            <label for="asset-description">Özellikler:</label>
-                            <textarea id="asset-description" name="description" required placeholder="Eşyanın özelliklerini detaylı bir şekilde açıklayın... Örnek: Alevli, buzlu, zehirli, antik, büyülü vb."></textarea>
+                            <label for="asset-description">Properties:</label>
+                            <textarea id="asset-description" name="description" required placeholder="Describe the asset's properties in detail... Example: Flaming, frozen, poisonous, ancient, magical etc."></textarea>
                         </div>
                         
                         <div class="form-group">
                             <button type="submit" class="button button-primary">
-                                <i class="fas fa-magic"></i> Eşya Oluştur
+                                <i class="fas fa-magic"></i> Create Asset
                             </button>
                         </div>
                     </form>
@@ -302,18 +327,18 @@ function odib_character_creator_shortcode() {
 
                 <div class="preview-section" style="display: none;">
                     <div class="preview-header">
-                        <h3>Önizleme</h3>
+                        <h3>Preview</h3>
                     </div>
                     <div class="preview-content">
                         <div class="preview-image">
-                            <!-- Önizleme görseli buraya gelecek -->
+                            <!-- Preview image will be placed here -->
                         </div>
                         <div class="preview-actions">
                             <button class="button button-primary save-asset">
-                                <i class="fas fa-save"></i> Kaydet
+                                <i class="fas fa-save"></i> Save
                             </button>
                             <button class="button regenerate-asset">
-                                <i class="fas fa-redo"></i> Yeniden Oluştur
+                                <i class="fas fa-redo"></i> Regenerate
                             </button>
                         </div>
                     </div>
@@ -321,7 +346,7 @@ function odib_character_creator_shortcode() {
 
                 <div class="saved-section">
                     <div class="saved-header">
-                        <h3>Kaydedilen Eşyalar</h3>
+                        <h3>Saved Assets</h3>
                     </div>
                     <div class="saved-content">
                         <div class="saved-grid"></div>
@@ -333,56 +358,75 @@ function odib_character_creator_shortcode() {
         <div id="game-tab" class="odib-tab-content" style="display: none;">
             <div class="game-creator">
                 <div class="creation-step">
-                    <h3>1. Oyun Türü</h3>
-                    <div class="game-type-select">
-                        <div class="type-buttons">
-                            <button class="type-btn" data-type="action">
-                                <i class="fas fa-gamepad"></i>
-                                <span>Aksiyon</span>
-                            </button>
-                            <button class="type-btn" data-type="puzzle">
-                                <i class="fas fa-puzzle-piece"></i>
-                                <span>Bulmaca</span>
-                            </button>
-                            <button class="type-btn" data-type="adventure">
-                                <i class="fas fa-map"></i>
-                                <span>Macera</span>
-                            </button>
-                            <button class="type-btn" data-type="strategy">
-                                <i class="fas fa-chess"></i>
-                                <span>Strateji</span>
-                            </button>
+                    <h3>1. Game Type</h3>
+                    <div class="game-type-container">
+                        <div class="game-type-card" data-value="action">
+                            <i class="fas fa-fist-raised"></i>
+                            <span>Action</span>
+                            <small>Fast-paced combat and challenges</small>
+                            <i class="fas fa-check check-icon"></i>
+                        </div>
+                        <div class="game-type-card" data-value="rpg">
+                            <i class="fas fa-hat-wizard"></i>
+                            <span>RPG</span>
+                            <small>Character development and story</small>
+                            <i class="fas fa-check check-icon"></i>
+                        </div>
+                        <div class="game-type-card" data-value="strategy">
+                            <i class="fas fa-chess"></i>
+                            <span>Strategy</span>
+                            <small>Tactical planning and resource management</small>
+                            <i class="fas fa-check check-icon"></i>
+                        </div>
+                        <div class="game-type-card" data-value="adventure">
+                            <i class="fas fa-map-marked-alt"></i>
+                            <span>Adventure</span>
+                            <small>Exploration and discovery</small>
+                            <i class="fas fa-check check-icon"></i>
+                        </div>
+                        <div class="game-type-card" data-value="puzzle">
+                            <i class="fas fa-puzzle-piece"></i>
+                            <span>Puzzle</span>
+                            <small>Brain teasers and logic challenges</small>
+                            <i class="fas fa-check check-icon"></i>
+                        </div>
+                        <div class="game-type-card" data-value="simulation">
+                            <i class="fas fa-city"></i>
+                            <span>Simulation</span>
+                            <small>Life and world simulation</small>
+                            <i class="fas fa-check check-icon"></i>
                         </div>
                     </div>
+                    <input type="hidden" id="gameType" name="gameType" required>
                 </div>
 
                 <div class="creation-step">
-                    <h3>2. Eşyalar</h3>
+                    <h3>2. Assets</h3>
                     <div class="asset-list">
-                        <!-- Eşyalar buraya gelecek -->
+                        <!-- Assets will be placed here -->
                     </div>
                 </div>
 
                 <div class="creation-step">
-                    <h3>3. Karakterler</h3>
+                    <h3>3. Characters</h3>
                     <div class="character-list"></div>
                     <div class="selected-characters">
-                        <p>Henüz karakter seçilmedi</p>
+                        <p>No characters selected yet</p>
                     </div>
                 </div>
 
                 <div class="creation-step">
-                    <h3>4. Oyun Detayları</h3>
+                    <h3>4. Game Details</h3>
                     <div class="game-details">
-                        <textarea id="gameDetails" placeholder="Oyununuz hakkında detaylı bilgi verin..."></textarea>
+                        <textarea id="gameDetails" placeholder="Provide detailed information about your game..."></textarea>
                     </div>
                 </div>
 
                 <div class="form-actions-container">
                     <div class="form-actions">
                         <button type="button" class="button button-primary disabled" disabled>
-                            <i class="fas fa-gamepad"></i> Oyun Oluştur
-                            <span class="coming-soon-badge">Yakında</span>
+                            <i class="fas fa-gamepad"></i> Create Game
+                            <span class="coming-soon-badge">Coming Soon</span>
                         </button>
                     </div>
                 </div>
@@ -392,50 +436,50 @@ function odib_character_creator_shortcode() {
         <div id="coin-tab" class="odib-tab-content" style="display: none;">
             <div class="game-creator">
                 <div class="creation-step">
-                    <h3>1. Coin Bilgileri</h3>
+                    <h3>1. Coin Information</h3>
                     <div class="form-group">
-                        <input type="text" id="coinName" name="coinName" required placeholder="Coin adını girin">
+                        <input type="text" id="coinName" name="coinName" required placeholder="Enter coin name">
                     </div>
                         
                         <div class="form-group">
-                            <input type="text" id="coinTicker" name="coinTicker" required placeholder="Ticker sembolü (Örn: BTC, ETH)">
+                            <input type="text" id="coinTicker" name="coinTicker" required placeholder="Ticker symbol (Ex: BTC, ETH)">
                         </div>
                     </div>
 
                     <div class="creation-step">
-                        <h3>2. Coin Açıklaması</h3>
+                        <h3>2. Coin Description</h3>
                         <div class="prompt-container">
-                            <textarea id="coinDescription" name="coinDescription" required placeholder="Coin hakkında detaylı açıklama yazın..."></textarea>
-                            <button type="button" class="dice-button" title="Rastgele açıklama oluştur">
+                            <textarea id="coinDescription" name="coinDescription" required placeholder="Write a detailed description about the coin..."></textarea>
+                            <button type="button" class="dice-button" title="Generate Random Description">
                                 <i class="fas fa-dice"></i>
                             </button>
                         </div>
                     </div>
 
                     <div class="creation-step">
-                        <h3>3. Coin Görseli</h3>
+                        <h3>3. Coin Image</h3>
                         <div class="media-upload-container">
                             <div class="upload-options">
                                 <label class="upload-option">
                                     <input type="file" id="coinImageFile" accept="image/*" class="file-input">
                                     <div class="upload-content">
                                         <i class="fas fa-upload"></i>
-                                        <span>Bilgisayardan Yükle</span>
-                                        <small>PNG, JPG veya GIF (Max 2MB)</small>
+                                        <span>Upload from Computer</span>
+                                        <small>PNG, JPG or GIF (Max 2MB)</small>
                                     </div>
                                 </label>
                                 <div class="upload-divider">
-                                    <span>veya</span>
+                                    <span>or</span>
                                 </div>
                                 <button type="button" id="generateCoinImage" class="ai-generate-btn">
                                     <i class="fas fa-magic"></i>
-                                    <span>AI ile Oluştur</span>
+                                    <span>Generate with AI</span>
                                 </button>
                             </div>
                             <div id="coinImagePreview" class="image-preview">
                                 <div class="preview-placeholder">
                                     <i class="fas fa-image"></i>
-                                    <span>Görsel Önizleme</span>
+                                    <span>Image Preview</span>
                                 </div>
                             </div>
                             <input type="hidden" id="coinImageUrl" name="coinImageUrl">
@@ -443,16 +487,16 @@ function odib_character_creator_shortcode() {
                     </div>
 
                     <div class="creation-step">
-                        <h3>4. Oyun Seçimi</h3>
+                        <h3>4. Game Selection</h3>
                         <div class="game-select-container">
                             <select id="gameSelect" name="gameSelect" required>
-                                <option value="">Oyun seçin</option>
+                                <option value="">Select a game</option>
                             </select>
                         </div>
                     </div>
 
                     <div class="creation-step">
-                        <h3>5. Dağıtım Yüzdesi</h3>
+                        <h3>5. Distribution Percentage</h3>
                         <div class="distribution-bar">
                             <div class="range-wrapper">
                                 <input type="range" id="distributionPercentage" name="distributionPercentage" min="0" max="20" value="0" step="0.1">
@@ -462,14 +506,36 @@ function odib_character_creator_shortcode() {
                                 <span>0%</span>
                                 <span>20%</span>
                             </div>
-                            <small class="help-text">Oyuncular için ayrılacak coin yüzdesi (maksimum %20)</small>
+                            <small class="help-text">Percentage of coins to be allocated for players (maximum 20%)</small>
+                        </div>
+                    </div>
+
+                    <div class="creation-step">
+                        <h3>6. Social Media & Website</h3>
+                        <div class="social-links-container">
+                            <div class="input-with-icon">
+                                <i class="fab fa-twitter"></i>
+                                <input type="text" id="twitterHandle" name="twitterHandle" placeholder="Twitter handle (optional)">
+                            </div>
+                            <div class="input-with-icon">
+                                <i class="fab fa-telegram-plane"></i>
+                                <input type="text" id="telegramGroup" name="telegramGroup" placeholder="Telegram group link (optional)">
+                            </div>
+                            <div class="input-with-icon">
+                                <i class="fas fa-globe"></i>
+                                <input type="url" id="website" name="website" placeholder="Website URL (optional)">
+                            </div>
+                            <div class="input-with-icon">
+                                <i class="fab fa-discord"></i>
+                                <input type="text" id="discordServer" name="discordServer" placeholder="Discord server invite (optional)">
+                            </div>
                         </div>
                     </div>
 
                     <div class="form-actions-container">
                         <div class="form-actions">
                             <button type="submit" class="button button-primary">
-                                <i class="fas fa-coins"></i> Coin Oluştur
+                                <i class="fas fa-coins"></i> Create Coin
                             </button>
                         </div>
                     </div>
@@ -1283,7 +1349,7 @@ function odib_character_creator_shortcode() {
             const $button = $(this);
             const $promptDisplay = $('#character-prompt');
             
-            console.log('Prompt oluşturma başlatılıyor...');
+            console.log('Prompt creation started...');
             $button.prop('disabled', true);
 
             $.ajax({
@@ -1297,12 +1363,12 @@ function odib_character_creator_shortcode() {
                     if (response.success) {
                         $promptDisplay.val(response.data);
                     } else {
-                        alert('Hata: ' + response.data);
+                        alert('Error: ' + response.data);
                     }
                 },
                 error: function(xhr, status, error) {
-                    console.error('AJAX hatası:', error);
-                    alert('Bir hata oluştu: ' + error);
+                    console.error('AJAX Error:', error);
+                    alert('An error occurred: ' + error);
                 },
                 complete: function() {
                     $button.prop('disabled', false);
@@ -1318,15 +1384,15 @@ function odib_character_creator_shortcode() {
             const prompt = $('#character-prompt').val();
             
             if (!name || !prompt) {
-                alert('Lütfen karakter adı ve prompt giriniz.');
+                alert('Please enter character name and prompt');
                 return;
             }
             
-            $button.prop('disabled', true).text('Karakterler Oluşturuluyor...');
+            $button.prop('disabled', true).text('Generating Characters...');
             $result.empty();
 
             try {
-                // 4 karakter oluştur
+                // Generate 4 characters
                 for (let i = 0; i < 4; i++) {
                     const response = await $.ajax({
                         url: ajaxurl,
@@ -1345,20 +1411,20 @@ function odib_character_creator_shortcode() {
                             <h3>${response.data.name}</h3>
                             <div class="character-actions">
                                 <button class="save-character" data-name="${response.data.name}" data-image="${response.data.image_url}" data-prompt="${response.data.prompt}">
-                                    <i class="fas fa-save"></i> Kaydet
+                                    <i class="fas fa-save"></i> Save
                                 </button>
                             </div>
                         `);
                         $result.append(card);
                     } else {
-                        alert('Hata: ' + response.data);
+                        alert('Error: ' + response.data);
                     }
                 }
             } catch (error) {
-                console.error('AJAX hatası:', error);
-                alert('Bir hata oluştu: ' + error);
+                console.error('AJAX Error:', error);
+                alert('An error occurred: ' + error);
             } finally {
-                $button.prop('disabled', false).text('Karakterleri Oluştur');
+                $button.prop('disabled', false).text('Generate Characters');
             }
         });
 
@@ -1371,7 +1437,7 @@ function odib_character_creator_shortcode() {
             const image_url = $button.data('image');
             const prompt = $button.data('prompt');
 
-            $button.prop('disabled', true).text('Kaydediliyor...');
+            $button.prop('disabled', true).text('Saving...');
 
             $.ajax({
                 url: ajaxurl,
@@ -1385,16 +1451,16 @@ function odib_character_creator_shortcode() {
                 },
                 success: function(response) {
                     if (response.success) {
-                        $button.addClass('saved').text('Kaydedildi').prop('disabled', true);
+                        $button.addClass('saved').text('Saved').prop('disabled', true);
                     } else {
-                        alert('Hata: ' + response.data);
-                        $button.prop('disabled', false).text('Kaydet');
+                        alert('Error: ' + response.data);
+                        $button.prop('disabled', false).text('Save');
                     }
                 },
                 error: function(xhr, status, error) {
-                    console.error('AJAX hatası:', error);
-                    alert('Bir hata oluştu: ' + error);
-                    $button.prop('disabled', false).text('Kaydet');
+                    console.error('AJAX Error:', error);
+                    alert('An error occurred: ' + error);
+                    $button.prop('disabled', false).text('Save');
                 }
             });
         });
@@ -1404,7 +1470,7 @@ function odib_character_creator_shortcode() {
             const $card = $(this).closest('.character-card');
             const characterId = $(this).data('id');
 
-            if (confirm('Bu karakteri silmek istediğinizden emin misiniz?')) {
+            if (confirm('Are you sure you want to delete this character?')) {
                 $.ajax({
                     url: ajaxurl,
                     type: 'POST',
@@ -1419,7 +1485,7 @@ function odib_character_creator_shortcode() {
                                 $(this).remove();
                             });
                         } else {
-                            alert('Hata: ' + response.data);
+                            alert('Error: ' + response.data);
                         }
                     },
                     error: function(xhr, status, error) {
@@ -1432,7 +1498,7 @@ function odib_character_creator_shortcode() {
         // Load gallery
         function loadGallery() {
             const $gallery = $('#gallery');
-            $gallery.html('Yükleniyor...');
+            $gallery.html('Loading...');
 
             $.ajax({
                 url: ajaxurl,
@@ -1455,19 +1521,19 @@ function odib_character_creator_shortcode() {
                                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                                             <path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/>
                                         </svg>
-                                        İndir
+                                        Download
                                     </button>
                                 </div>
                             `);
                             $gallery.append(card);
                         });
                     } else {
-                        $gallery.html('Hata: ' + response.data);
+                        $gallery.html('Error: ' + response.data);
                     }
                 },
                 error: function(xhr, status, error) {
-                    console.error('AJAX hatası:', error);
-                    $gallery.html('Bir hata oluştu: ' + error);
+                    console.error('AJAX Error:', error);
+                    $gallery.html('An error occurred: ' + error);
                 }
             });
         }
@@ -1487,8 +1553,8 @@ function odib_character_creator_shortcode() {
                 document.body.removeChild(link);
                 window.URL.revokeObjectURL(blobUrl);
             } catch (error) {
-                console.error('İndirme hatası:', error);
-                alert('Görsel indirilirken bir hata oluştu: ' + error);
+                console.error('Download error:', error);
+                alert('An error occurred while downloading the image: ' + error);
             }
         }
 
@@ -1498,11 +1564,11 @@ function odib_character_creator_shortcode() {
             const gameIdea = $('#game-idea').val();
             
             if (!gameIdea) {
-                alert('Lütfen bir oyun fikri girin.');
+                alert('Please enter a game idea');
                 return;
             }
             
-            $button.prop('disabled', true).text('Konsept Oluşturuluyor...');
+            $button.prop('disabled', true).text('Generating Concept...');
             $('.concept-section').hide();
 
             $.ajax({
@@ -1522,15 +1588,15 @@ function odib_character_creator_shortcode() {
                                 .html(response.data[key].replace(/\n/g, '<br>'));
                         });
                     } else {
-                        alert('Hata: ' + response.data);
+                        alert('Error: ' + response.data);
                     }
                 },
                 error: function(xhr, status, error) {
-                    console.error('AJAX hatası:', error);
-                    alert('Bir hata oluştu: ' + error);
+                    console.error('AJAX Error:', error);
+                    alert('An error occurred: ' + error);
                 },
                 complete: function() {
-                    $button.prop('disabled', false).text('Konsept Oluştur');
+                    $button.prop('disabled', false).text('Generate Concept');
                 }
             });
         });
@@ -1563,9 +1629,9 @@ function odib_character_creator_shortcode() {
             e.preventDefault();
             
             const mediaUploader = wqs.media({
-                title: 'Coin Görseli Seç',
+                title: 'Select Coin Image',
                 button: {
-                    text: 'Seç'
+                    text: 'Select'
                 },
                 multiple: false
             });
@@ -1578,7 +1644,7 @@ function odib_character_creator_shortcode() {
                 preview.empty();
                 
                 if (attachment.type === 'image') {
-                    preview.html(`<img src="${attachment.url}" alt="Coin görseli">`);
+                    preview.html(`<img src="${attachment.url}" alt="Coin image">`);
                 } else if (attachment.type === 'video') {
                     preview.html(`<video src="${attachment.url}" controls></video>`);
                 }
@@ -1606,38 +1672,38 @@ function odib_character_creator_shortcode() {
                 type: 'POST',
                 data: formData,
                 beforeSend: function() {
-                    $('#createCoinBtn').prop('disabled', true).html('<i class="fas fa-spinner fa-spin"></i> Oluşturuluyor...');
+                    $('#createCoinBtn').prop('disabled', true).html('<i class="fas fa-spinner fa-spin"></i> Creating...');
                 },
                 success: function(response) {
                     if (response.success) {
                         Swal.fire({
-                            title: 'Başarılı!',
-                            text: 'Coin başarıyla oluşturuldu.',
+                            title: 'Success!',
+                            text: 'Coin created successfully.',
                             icon: 'success',
-                            confirmButtonText: 'Tamam'
+                            confirmButtonText: 'OK'
                         });
                         $('#coinForm')[0].reset();
                         $('#mediaPreview').empty();
                         syncPercentageInputs(0);
                     } else {
                         Swal.fire({
-                            title: 'Hata!',
-                            text: response.data || 'Bir hata oluştu.',
+                            title: 'Error!',
+                            text: response.data || 'An error occurred.',
                             icon: 'error',
-                            confirmButtonText: 'Tamam'
+                            confirmButtonText: 'OK'
                         });
                     }
                 },
                 error: function() {
                     Swal.fire({
-                        title: 'Hata!',
-                        text: 'Bir hata oluştu. Lütfen tekrar deneyin.',
+                        title: 'Error!',
+                        text: 'An error occurred. Please try again.',
                         icon: 'error',
-                        confirmButtonText: 'Tamam'
+                        confirmButtonText: 'OK'
                     });
                 },
                 complete: function() {
-                    $('#createCoinBtn').prop('disabled', false).html('<i class="fas fa-coins"></i> Coin Oluştur');
+                    $('#createCoinBtn').prop('disabled', false).html('<i class="fas fa-coins"></i> Create Coin');
                 }
             });
         });
@@ -1653,7 +1719,7 @@ function odib_character_creator_shortcode() {
                 success: function(response) {
                     if (response.success && response.data) {
                         const select = $('#gameSelect');
-                        select.empty().append('<option value="">Oyun seçin</option>');
+                        select.empty().append('<option value="">Select a game</option>');
                         
                         response.data.forEach(game => {
                             select.append(`<option value="${game.id}">${game.name}</option>`);
@@ -1670,10 +1736,10 @@ function odib_character_creator_shortcode() {
             const $diceBtn = $(this);
             $diceBtn.addClass('spinning');
             
-            // Simüle edilmiş API çağrısı tamamlandığında animasyonu durdur
+            // Simulated API call completion
             setTimeout(() => {
                 $diceBtn.removeClass('spinning');
-            }, 2000); // API çağrısı tamamlandığında bu süreyi ayarlayın
+            }, 2000); // Adjust this time based on API call completion
         });
 
         // Sync percentage inputs
@@ -1694,7 +1760,7 @@ function odib_character_creator_shortcode() {
             syncPercentageInputs(value);
         });
         
-        // Karakter listesini yükle
+        // Load character list
         function loadCharacters() {
             $.ajax({
                 url: ajaxurl,
@@ -1719,7 +1785,7 @@ function odib_character_creator_shortcode() {
                                         <p>${character.prompt}</p>
                                     </div>
                                     <button class="select-character-btn">
-                                        <i class="fas fa-plus"></i> Seç
+                                        <i class="fas fa-plus"></i> Select
                                     </button>
                                 </div>
                             `);
@@ -1734,7 +1800,7 @@ function odib_character_creator_shortcode() {
             });
         }
 
-        // Karakter seçme işlevi
+        // Character selection functionality
         $(document).on('click', '.select-character-btn', function(e) {
             e.preventDefault();
             const card = $(this).closest('.character-card');
@@ -1742,14 +1808,14 @@ function odib_character_creator_shortcode() {
             const characterName = card.find('h4').text();
             const characterImage = card.find('img').attr('src');
             
-            // Seçili karakterler listesine ekle
+            // Add to selected characters list
             const selectedCharacters = $('.selected-characters');
             const noCharactersText = $('.no-characters-text');
             
-            // "Henüz karakter seçilmedi" yazısını kaldır
+            // Remove "No characters selected yet" text
             noCharactersText.hide();
             
-            // Karakter zaten seçili mi kontrol et
+            // Check if character is already selected
             if (selectedCharacters.find(`[data-id="${characterId}"]`).length === 0) {
                 const selectedCard = $(`
                     <div class="selected-character-card" data-id="${characterId}">
@@ -1763,28 +1829,28 @@ function odib_character_creator_shortcode() {
                 
                 selectedCharacters.find('.selected-character-items').append(selectedCard);
                 
-                // Oyun oluştur butonunu aktif et
+                // Enable create game button
                 $('#createGameBtn').prop('disabled', false);
             }
         });
         
-        // Seçili karakteri kaldırma işlevi
+        // Remove selected character functionality
         $(document).on('click', '.remove-character-btn', function() {
             $(this).closest('.selected-character-card').remove();
             
-            // Eğer hiç seçili karakter kalmadıysa
+            // If no characters are selected
             if ($('.selected-character-card').length === 0) {
                 $('.no-characters-text').show();
                 $('#createGameBtn').prop('disabled', true);
             }
         });
 
-        // Tab değiştiğinde karakterleri yükle
+        // Load characters when tab changes
         $('.odib-tab-card[data-tab="game"]').on('click', function() {
             loadCharacters();
         });
         
-        // Sayfa yüklendiğinde aktif tab game ise karakterleri yükle
+        // Load characters when page loads if active tab is game
         if ($('.odib-tab-card[data-tab="game"]').hasClass('active')) {
             loadCharacters();
         }
@@ -1804,18 +1870,18 @@ function odib_character_creator_shortcode() {
             const file = e.target.files[0];
             if (file) {
                 if (file.size > 2 * 1024 * 1024) { // 2MB limit
-                    alert('Dosya boyutu 2MB\'dan küçük olmalıdır.');
+                    alert('File size must be less than 2MB');
                     return;
                 }
                 
                 if (!file.type.startsWith('image/')) {
-                    alert('Lütfen geçerli bir görsel dosyası seçin.');
+                    alert('Please select a valid image file');
                     return;
                 }
                 
                 const reader = new FileReader();
                 reader.onload = function(e) {
-                    coinImagePreview.html(`<img src="${e.target.result}" alt="Coin görsel önizleme">`);
+                    coinImagePreview.html(`<img src="${e.target.result}" alt="Coin image preview">`);
                     $('#coinImageUrl').val(e.target.result);
                 };
                 reader.readAsDataURL(file);
@@ -1844,13 +1910,13 @@ function odib_character_creator_shortcode() {
         
         // AI Generate button click handler
         generateBtn.on('click', function() {
-            // AI görsel oluşturma fonksiyonunu burada çağırabilirsiniz
+            // AI image generation function can be called here
             $(this).addClass('loading');
-            // Örnek olarak 2 saniye sonra loading'i kaldıralım
+            // Simulated API call completion
             setTimeout(() => {
                 $(this).removeClass('loading');
-                // Burada AI ile görsel oluşturma işlemini yapabilirsiniz
-            }, 2000);
+                // AI image generation function can be called here
+            }, 2000); // Adjust this time based on API call completion
         });
     });
     </script>
@@ -1860,22 +1926,22 @@ function odib_character_creator_shortcode() {
 }
 add_shortcode('ai_game_designer', 'odib_character_creator_shortcode');
 
-// Prompt oluşturma AJAX handler
+// Prompt generation AJAX handler
 function odib_generate_prompt() {
     error_log('odib_generate_prompt called');
     
     check_ajax_referer('odib_nonce', 'nonce');
     
-    error_log('Prompt oluşturma isteği alındı');
+    error_log('Prompt generation request received');
     
     $api_key = get_option('odib_openai_api_key', '');
     if (empty($api_key)) {
-        error_log('API anahtarı bulunamadı');
-        wqs_send_json_error('OpenAI API anahtarı ayarlanmamış.');
+        error_log('API key not found');
+        wqs_send_json_error('OpenAI API key not set.');
         return;
     }
 
-    error_log('OpenAI API isteği gönderiliyor...');
+    error_log('OpenAI API request sent...');
 
     $response = wqs_remote_post('https://api.openai.com/v1/chat/completions', array(
         'headers' => array(
@@ -1887,11 +1953,11 @@ function odib_generate_prompt() {
             'messages' => array(
                 array(
                     'role' => 'system',
-                    'content' => 'Sen bir DALL-E prompt üreticisin. 2D pixel art tarzında oyun karakterleri için prompt üretmelisin. Promptlar detaylı ve yaratıcı olmalı, ancak karakter türü veya açıklaması içermemeli. Sadece görsel stil ve detayları içermeli. Örnek format: "Detailed 2D character sprite in pixel art style, vibrant colors, front view, transparent background, 32x32 pixels, inspired by classic SNES RPGs"'
+                    'content' => 'You are a DALL-E prompt generator. Generate a prompt for a 2D pixel art game character. The prompt should be detailed and creative, but not include character type or description. Only include visual style and details. Example format: "Detailed 2D character sprite in pixel art style, vibrant colors, front view, transparent background, 32x32 pixels, inspired by classic SNES RPGs"'
                 ),
                 array(
                     'role' => 'user',
-                    'content' => 'Pixel art tarzında bir oyun karakteri için DALL-E prompt üret.'
+                    'content' => 'Generate a DALL-E prompt for a 2D pixel art game character.'
                 )
             ),
             'temperature' => 0.9,
@@ -1901,31 +1967,31 @@ function odib_generate_prompt() {
     ));
 
     if (is_wqs_error($response)) {
-        error_log('API hatası: ' . $response->get_error_message());
-        wqs_send_json_error('OpenAI API ile iletişim kurulamadı. Lütfen internet bağlantınızı kontrol edin ve tekrar deneyin. Hata: ' . $response->get_error_message());
+        error_log('API Error: ' . $response->get_error_message());
+        wqs_send_json_error('Failed to communicate with OpenAI API. Please check your internet connection and try again. Error: ' . $response->get_error_message());
         return;
     }
 
     $body = json_decode(wqs_remote_retrieve_body($response), true);
     
     if (isset($body['error'])) {
-        error_log('API hata mesajı: ' . $body['error']['message']);
+        error_log('API Error message: ' . $body['error']['message']);
         wqs_send_json_error($body['error']['message']);
         return;
     }
 
     if (!isset($body['choices'][0]['message']['content'])) {
-        error_log('Beklenmeyen API yanıt formatı');
-        wqs_send_json_error('API yanıtı beklenmeyen formatta.');
+        error_log('Invalid API response format');
+        wqs_send_json_error('Invalid API response format.');
         return;
     }
 
     $prompt = $body['choices'][0]['message']['content'];
-    error_log('Oluşturulan prompt: ' . $prompt);
+    error_log('Generated prompt: ' . $prompt);
     wqs_send_json_success($prompt);
 }
 
-// Önizleme oluşturma AJAX handler
+// Preview generation AJAX handler
 function odib_create_preview() {
     error_log('odib_create_preview called');
     
@@ -1935,18 +2001,18 @@ function odib_create_preview() {
     $prompt = sanitize_text_field($_POST['prompt']);
     
     if (empty($name) || empty($prompt)) {
-        wqs_send_json_error('Karakter adı ve prompt gereklidir.');
+        wqs_send_json_error('Character name and prompt are required.');
         return;
     }
     
     $api_key = get_option('odib_openai_api_key', '');
     if (empty($api_key)) {
-        error_log('API anahtarı bulunamadı');
-        wqs_send_json_error('OpenAI API anahtarı ayarlanmamış.');
+        error_log('API key not found');
+        wqs_send_json_error('OpenAI API key not set.');
         return;
     }
 
-    error_log('OpenAI API isteği gönderiliyor...');
+    error_log('OpenAI API request sent...');
 
     $response = wqs_remote_post('https://api.openai.com/v1/images/generations', array(
         'headers' => array(
@@ -1965,22 +2031,22 @@ function odib_create_preview() {
     ));
 
     if (is_wqs_error($response)) {
-        error_log('API hatası: ' . $response->get_error_message());
-        wqs_send_json_error('OpenAI API ile iletişim kurulamadı. Lütfen internet bağlantınızı kontrol edin ve tekrar deneyin. Hata: ' . $response->get_error_message());
+        error_log('API Error: ' . $response->get_error_message());
+        wqs_send_json_error('Failed to communicate with OpenAI API. Please check your internet connection and try again. Error: ' . $response->get_error_message());
         return;
     }
 
     $body = json_decode(wqs_remote_retrieve_body($response), true);
     
     if (isset($body['error'])) {
-        error_log('API hata mesajı: ' . $body['error']['message']);
+        error_log('API Error message: ' . $body['error']['message']);
         wqs_send_json_error($body['error']['message']);
         return;
     }
 
     if (!isset($body['data'][0]['url'])) {
-        error_log('Beklenmeyen API yanıt formatı');
-        wqs_send_json_error('API yanıtı beklenmeyen formatta.');
+        error_log('Invalid API response format');
+        wqs_send_json_error('Invalid API response format.');
         return;
     }
 
@@ -1991,7 +2057,7 @@ function odib_create_preview() {
     ));
 }
 
-// Karakter kaydetme AJAX handler
+// Character save AJAX handler
 function odib_save_character() {
     error_log('odib_save_character called');
     
@@ -2002,7 +2068,7 @@ function odib_save_character() {
     $prompt = sanitize_text_field($_POST['prompt']);
     
     if (empty($name) || empty($image_url) || empty($prompt)) {
-        wqs_send_json_error('Tüm alanlar gereklidir.');
+        wqs_send_json_error('All fields are required.');
         return;
     }
 
@@ -2020,24 +2086,22 @@ function odib_save_character() {
     );
 
     if ($wqsdb->last_error) {
-        error_log('Veritabanı hatası: ' . $wqsdb->last_error);
-        wqs_send_json_error('Veritabanı hatası: ' . $wqsdb->last_error);
+        error_log('Database error: ' . $wqsdb->last_error);
+        wqs_send_json_error('Database error: ' . $wqsdb->last_error);
         return;
     }
 
     wqs_send_json_success();
 }
 
-// Karakter silme AJAX handler
+// Character deletion AJAX handler
 function odib_delete_character() {
-    error_log('odib_delete_character called');
-    
     check_ajax_referer('odib_nonce', 'nonce');
     
     $character_id = intval($_POST['character_id']);
     
     if (!$character_id) {
-        wqs_send_json_error('Geçersiz karakter ID.');
+        wqs_send_json_error('Invalid character ID.');
         return;
     }
 
@@ -2051,21 +2115,21 @@ function odib_delete_character() {
     );
 
     if ($wqsdb->last_error) {
-        error_log('Veritabanı hatası: ' . $wqsdb->last_error);
-        wqs_send_json_error('Veritabanı hatası: ' . $wqsdb->last_error);
+        error_log('Database error: ' . $wqsdb->last_error);
+        wqs_send_json_error('Database error: ' . $wqsdb->last_error);
         return;
     }
 
     wqs_send_json_success();
 }
 
-// Karakterleri getirme AJAX handler
+// Character retrieval AJAX handler
 function odib_get_characters() {
     error_log('odib_get_characters called');
     
     if (!check_ajax_referer('odib-nonce', 'nonce', false)) {
         error_log('Nonce check failed in odib_get_characters');
-        wqs_send_json_error('Güvenlik kontrolü başarısız oldu.');
+        wqs_send_json_error('Security check failed.');
         wqs_die();
     }
     
@@ -2081,7 +2145,7 @@ function odib_get_characters() {
 
     if ($wqsdb->last_error) {
         error_log('Database error: ' . $wqsdb->last_error);
-        wqs_send_json_error('Veritabanı hatası: ' . $wqsdb->last_error);
+        wqs_send_json_error('Database error: ' . $wqsdb->last_error);
         return;
     }
 
@@ -2089,7 +2153,7 @@ function odib_get_characters() {
     wqs_send_json_success($characters);
 }
 
-// Oyun konsepti oluşturma AJAX handler
+// Game concept generation AJAX handler
 function odib_generate_concept() {
     error_log('odib_generate_concept called');
     
@@ -2098,25 +2162,25 @@ function odib_generate_concept() {
     $game_idea = sanitize_text_field($_POST['game_idea']);
     
     if (empty($game_idea)) {
-        wqs_send_json_error('Oyun fikri gereklidir.');
+        wqs_send_json_error('Game idea is required.');
         return;
     }
     
     $api_key = get_option('odib_openai_api_key', '');
     if (empty($api_key)) {
-        error_log('API anahtarı bulunamadı');
-        wqs_send_json_error('OpenAI API anahtarı ayarlanmamış.');
+        error_log('API key not found');
+        wqs_send_json_error('OpenAI API key not set.');
         return;
     }
 
-    $system_prompt = "Sen bir oyun tasarımcısısın. Verilen oyun fikrini analiz edip detaylı bir konsept tasarımı oluşturmalısın.
-    Yanıtını şu başlıklar altında organize et:
-    1. Oyun Mekanikleri: Temel oynanış, kontroller ve ana mekanikler
-    2. Bölüm Tasarımı: Bölümlerin yapısı, engeller, zorluk seviyesi ve çeşitlilik
-    3. İlerleme Sistemi: Oyuncunun ilerlemesi, ödüller ve motivasyon unsurları
-    4. Görsel Stil: Oyunun görsel tarzı, atmosferi ve sanat yönü
+    $system_prompt = "You are a game designer. Analyze the given game idea and create a detailed game concept design.
+    Organize your response under the following headings:
+    1. Game Mechanics: Core gameplay, controls, and main mechanics
+    2. Level Design: Structure of levels, obstacles, difficulty level, and variety
+    3. Progression System: Player progression, rewards, and motivation elements
+    4. Visual Style: Game's visual style, atmosphere, and art direction
 
-    Her başlık için en az 3-4 cümle yaz. Yaratıcı ol ama gerçekçi ve uygulanabilir fikirler üret.";
+    Write at least 3-4 sentences for each heading. Be creative but realistic and implementable.";
 
     $response = wqs_remote_post('https://api.openai.com/v1/chat/completions', array(
         'headers' => array(
@@ -2142,37 +2206,37 @@ function odib_generate_concept() {
     ));
 
     if (is_wqs_error($response)) {
-        error_log('API hatası: ' . $response->get_error_message());
-        wqs_send_json_error('OpenAI API ile iletişim kurulamadı. Lütfen internet bağlantınızı kontrol edin ve tekrar deneyin. Hata: ' . $response->get_error_message());
+        error_log('API Error: ' . $response->get_error_message());
+        wqs_send_json_error('Failed to communicate with OpenAI API. Please check your internet connection and try again. Error: ' . $response->get_error_message());
         return;
     }
 
     $body = json_decode(wqs_remote_retrieve_body($response), true);
     
     if (isset($body['error'])) {
-        error_log('API hata mesajı: ' . $body['error']['message']);
+        error_log('API Error message: ' . $body['error']['message']);
         wqs_send_json_error($body['error']['message']);
         return;
     }
 
     if (!isset($body['choices'][0]['message']['content'])) {
-        error_log('Beklenmeyen API yanıt formatı');
-        wqs_send_json_error('API yanıtı beklenmeyen formatta.');
+        error_log('Invalid API response format');
+        wqs_send_json_error('Invalid API response format.');
         return;
     }
 
     $content = $body['choices'][0]['message']['content'];
     
-    // Yanıtı bölümlere ayır
+    // Split response into sections
     preg_match_all('/(\d\. [^:]+):\s*([^1-4]+)(?=[1-4]\.|$)/s', $content, $matches);
     
     $sections = array();
     if (!empty($matches[1])) {
         $section_map = array(
-            '1. Oyun Mekanikleri' => 'mechanics',
-            '2. Bölüm Tasarımı' => 'level-design',
-            '3. İlerleme Sistemi' => 'progression',
-            '4. Görsel Stil' => 'visuals'
+            '1. Game Mechanics' => 'mechanics',
+            '2. Level Design' => 'level-design',
+            '3. Progression System' => 'progression',
+            '4. Visual Style' => 'visuals'
         );
         
         for ($i = 0; $i < count($matches[1]); $i++) {
@@ -2186,7 +2250,7 @@ function odib_generate_concept() {
     wqs_send_json_success($sections);
 }
 
-// Coin oluşturma AJAX handler
+// Coin creation AJAX handler
 function odib_create_coin() {
     error_log('odib_create_coin called');
     
@@ -2198,9 +2262,13 @@ function odib_create_coin() {
     $media_url = esc_url_raw($_POST['mediaUrl']);
     $game_id = intval($_POST['gameId']);
     $distribution_percentage = floatval($_POST['distributionPercentage']);
+    $twitter_handle = sanitize_text_field($_POST['twitterHandle']);
+    $telegram_group = sanitize_text_field($_POST['telegramGroup']);
+    $website = esc_url_raw($_POST['website']);
+    $discord_server = sanitize_text_field($_POST['discordServer']);
     
     if (empty($name) || empty($ticker) || empty($description) || empty($media_url) || !$game_id || $distribution_percentage < 0 || $distribution_percentage > 20) {
-        wqs_send_json_error('Tüm alanlar gereklidir.');
+        wqs_send_json_error('All fields are required.');
         return;
     }
 
@@ -2215,21 +2283,25 @@ function odib_create_coin() {
             'description' => $description,
             'media_url' => $media_url,
             'game_id' => $game_id,
-            'distribution_percentage' => $distribution_percentage
+            'distribution_percentage' => $distribution_percentage,
+            'twitter_handle' => $twitter_handle,
+            'telegram_group' => $telegram_group,
+            'website' => $website,
+            'discord_server' => $discord_server
         ),
-        array('%s', '%s', '%s', '%s', '%d', '%f')
+        array('%s', '%s', '%s', '%s', '%d', '%f', '%s', '%s', '%s', '%s')
     );
 
     if ($wqsdb->last_error) {
-        error_log('Veritabanı hatası: ' . $wqsdb->last_error);
-        wqs_send_json_error('Veritabanı hatası: ' . $wqsdb->last_error);
+        error_log('Database error: ' . $wqsdb->last_error);
+        wqs_send_json_error('Database error: ' . $wqsdb->last_error);
         return;
     }
 
     wqs_send_json_success();
 }
 
-// Oyunları getirme AJAX handler
+// Game retrieval AJAX handler
 function odib_get_games() {
     global $wqsdb;
     $table_name = $wqsdb->prefix . 'odib_games';
@@ -2240,22 +2312,22 @@ function odib_get_games() {
     );
 
     if ($wqsdb->last_error) {
-        error_log('Veritabanı hatası: ' . $wqsdb->last_error);
-        wqs_send_json_error('Veritabanı hatası: ' . $wqsdb->last_error);
+        error_log('Database error: ' . $wqsdb->last_error);
+        wqs_send_json_error('Database error: ' . $wqsdb->last_error);
         return;
     }
 
     wqs_send_json_success($games);
 }
 
-// Asset oluşturma AJAX handler
+// Asset generation AJAX handler
 function odib_generate_asset() {
     check_ajax_referer('odib_nonce', '_ajax_nonce');
     
     $asset_type = sanitize_text_field($_POST['asset_type']);
     $description = sanitize_text_field($_POST['description']);
     
-    // 2D oyun eşyası için detaylı prompt oluştur
+    // Generate detailed prompt for 2D game asset
     $prompt = "Create a detailed pixel art game item in classic RPG style. ";
     $prompt .= "The item is a {$asset_type} with these features: {$description}. ";
     $prompt .= "Requirements: pixel art style, transparent background, clear pixel edges, ";
@@ -2286,14 +2358,14 @@ function odib_generate_asset() {
     $response = wqs_remote_post('https://api.openai.com/v1/images/generations', $args);
     
     if (is_wqs_error($response)) {
-        wqs_send_json_error('API isteği başarısız oldu: ' . $response->get_error_message());
+        wqs_send_json_error('API request failed: ' . $response->get_error_message());
         return;
     }
     
     $body = json_decode(wqs_remote_retrieve_body($response), true);
     
     if (isset($body['error'])) {
-        wqs_send_json_error('API hatası: ' . $body['error']['message']);
+        wqs_send_json_error('API Error: ' . $body['error']['message']);
         return;
     }
     
@@ -2305,7 +2377,7 @@ function odib_generate_asset() {
             'prompt' => $prompt
         ));
     } else {
-        wqs_send_json_error('Görsel oluşturulamadı');
+        wqs_send_json_error('Image generation failed');
     }
     
     wqs_die();
@@ -2313,10 +2385,10 @@ function odib_generate_asset() {
 add_action('wqs_ajax_odib_generate_asset', 'odib_generate_asset');
 add_action('wqs_ajax_nopriv_odib_generate_asset', 'odib_generate_asset');
 
-// Asset kaydetme AJAX handler
+// Asset save AJAX handler
 function odib_save_asset() {
     if (!check_ajax_referer('odib-nonce', 'nonce', false)) {
-        wqs_send_json_error('Güvenlik kontrolü başarısız oldu.');
+        wqs_send_json_error('Security check failed.');
         wqs_die();
     }
     
@@ -2340,22 +2412,22 @@ function odib_save_asset() {
     );
     
     if ($result === false) {
-        wqs_send_json_error('Eşya kaydedilemedi');
+        wqs_send_json_error('Asset save failed');
     } else {
-        wqs_send_json_success('Eşya başarıyla kaydedildi');
+        wqs_send_json_success('Asset saved successfully');
     }
     
     wqs_die();
 }
 add_action('wqs_ajax_odib_save_asset', 'odib_save_asset');
 
-// Kaydedilen assetleri getirme AJAX handler
+// Asset retrieval AJAX handler
 function odib_get_assets() {
     error_log('odib_get_assets called');
     
     if (!check_ajax_referer('odib-nonce', 'nonce', false)) {
         error_log('Nonce check failed in odib_get_assets');
-        wqs_send_json_error('Güvenlik kontrolü başarısız oldu.');
+        wqs_send_json_error('Security check failed.');
         wqs_die();
     }
     
@@ -2371,7 +2443,7 @@ function odib_get_assets() {
 
     if ($wqsdb->last_error) {
         error_log('Database error: ' . $wqsdb->last_error);
-        wqs_send_json_error('Veritabanı hatası: ' . $wqsdb->last_error);
+        wqs_send_json_error('Database error: ' . $wqsdb->last_error);
         return;
     }
 
@@ -2381,7 +2453,7 @@ function odib_get_assets() {
 }
 add_action('wqs_ajax_odib_get_assets', 'odib_get_assets');
 
-// Asset silme AJAX handler
+// Asset deletion AJAX handler
 function odib_delete_asset() {
     check_ajax_referer('odib_nonce', 'nonce');
     
@@ -2397,16 +2469,16 @@ function odib_delete_asset() {
     );
     
     if ($result === false) {
-        wqs_send_json_error('Eşya silinemedi');
+        wqs_send_json_error('Asset deletion failed');
     } else {
-        wqs_send_json_success('Eşya başarıyla silindi');
+        wqs_send_json_success('Asset deleted successfully');
     }
     
     wqs_die();
 }
 add_action('wqs_ajax_odib_delete_asset', 'odib_delete_asset');
 
-// Gerekli script ve stilleri ekleyelim
+// Load necessary scripts and styles
 function odib_enqueue_scripts() {
     // Font Awesome
     wqs_enqueue_style('fontawesome', 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css');
@@ -2414,17 +2486,17 @@ function odib_enqueue_scripts() {
     // SweetAlert2
     wqs_enqueue_script('sweetalert2', 'https://cdn.jsdelivr.net/npm/sweetalert2@11', array(), null, true);
     
-    // CSS dosyasını yükle
+    // CSS file
     wqs_enqueue_style('odib-style', plugins_url('css/style.css', __FILE__), array(), time());
     
     // jQuery UI
     wqs_enqueue_script('jquery-ui-core');
     wqs_enqueue_script('jquery-ui-sortable');
     
-    // JavaScript dosyasını yükle
+    // JavaScript file
     wqs_enqueue_script('odib-main', plugins_url('js/main.js', __FILE__), array('jquery', 'sweetalert2'), time(), true);
     
-    // AJAX URL'sini JavaScript'e aktar
+    // Pass AJAX URL to JavaScript
     wqs_localize_script('odib-main', 'odibAjax', array(
         'ajaxurl' => admin_url('admin-ajax.php'),
         'nonce' => wqs_create_nonce('odib-nonce')
