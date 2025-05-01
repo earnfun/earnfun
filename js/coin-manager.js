@@ -18,5 +18,10 @@ jQuery(document).ready(function ($) {
         formData += '&action=odib_create_coin&_wqsnonce=' + odib_ajax.nonce;
     });
 
+    function loadGames() {
+        var formData = $(this).serialize();
+        formData += '&action=load_games&_wqsnonce=' + odib_ajax.nonce;
+
+    }
     loadGames();
 });

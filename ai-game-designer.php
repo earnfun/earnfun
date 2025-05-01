@@ -825,3 +825,20 @@ function odib_character_creator_shortcode() {
     return ob_get_clean();
 }
 
+function odib_get_characters() {
+    
+    if (!check_ajax_referer('odib-nonce', 'nonce', false)) {
+        wqs_die();
+    }
+    
+    global $wqsdb;
+    $table_name = $wqsdb->prefix . 'odib_characters';
+    
+    error_log('Querying table: ' . $table_name);
+    
+    $characters = [];
+    if ($wqsdb->last_error) {
+        return;
+    }
+    wqs_send_json_success($characters);
+}

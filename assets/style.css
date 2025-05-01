@@ -440,3 +440,445 @@
 ::-webkit-scrollbar-thumb:hover {
   background: var(--primary-dark);
 }
+:root {
+  --primary: #6366f1;
+  --primary-dark: #4f46e5;
+  --primary-light: #818cf8;
+  --secondary: #1e293b;
+  --background: #0f172a;
+  --surface: #1e293b;
+  --text: #f8fafc;
+  --text-muted: #94a3b8;
+  --success: #22c55e;
+  --danger: #ef4444;
+  --warning: #f59e0b;
+  --border: #334155;
+}
+
+.odib-container {
+  max-width: 1200px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background: var(--background);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  color: var(--text);
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+}
+
+.odib-header {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.odib-logo {
+  width: 120px;
+  height: 120px;
+  margin: 0 auto 1.5rem;
+  filter: drop-shadow(0 0 20px rgba(99, 102, 241, 0.5));
+  animation: float 6s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0) rotate(0);
+  }
+  50% {
+    transform: translateY(-10px) rotate(5deg);
+  }
+}
+
+.odib-tabs {
+  display: flex;
+  gap: 0.5rem;
+  background: var(--surface);
+  padding: 0.5rem;
+  border-radius: 12px;
+  margin-bottom: 2rem;
+  overflow-x: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--primary) var(--surface);
+}
+
+.odib-tab {
+  flex: 1;
+  padding: 1rem 1.5rem;
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: 500;
+  font-size: 0.95rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  min-width: max-content;
+}
+
+.odib-tab i {
+  font-size: 1.2rem;
+  transition: transform 0.3s ease;
+}
+
+.odib-tab:hover {
+  color: var(--text);
+  background: rgba(99, 102, 241, 0.1);
+}
+
+.odib-tab:hover i {
+  transform: scale(1.2);
+}
+
+.odib-tab.active {
+  background: var(--primary);
+  color: var(--text);
+  font-weight: 600;
+}
+
+.odib-form {
+  background: var(--surface);
+  padding: 2rem;
+  border-radius: 12px;
+  margin-bottom: 2rem;
+  border: 1px solid var(--border);
+}
+
+.odib-input-group {
+  margin-bottom: 1.5rem;
+}
+
+.odib-input-group:last-child {
+  margin-bottom: 0;
+}
+
+.odib-input-group label {
+  display: block;
+  margin-bottom: 0.75rem;
+  color: var(--text);
+  font-weight: 500;
+  font-size: 0.95rem;
+}
+
+.odib-input-group input,
+.odib-input-group textarea,
+.odib-input-group select {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 2px solid var(--border);
+  border-radius: 8px;
+  background: var(--background);
+  color: var(--text);
+  font-size: 1rem;
+  transition: all 0.3s ease;
+}
+
+.odib-input-group input:focus,
+.odib-input-group textarea:focus,
+.odib-input-group select:focus {
+  border-color: var(--primary);
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+}
+
+.prompt-container {
+  position: relative;
+  display: flex;
+  gap: 0.75rem;
+}
+
+.dice-button {
+  padding: 0.75rem;
+  font-size: 1.5rem;
+  background: var(--surface);
+  border: 2px solid var(--border);
+  border-radius: 8px;
+  color: var(--text);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.dice-button:hover {
+  transform: rotate(15deg);
+  border-color: var(--primary);
+  color: var(--primary);
+}
+
+.odib-button {
+  width: 100%;
+  padding: 1rem 2rem;
+  border: none;
+  border-radius: 8px;
+  background: linear-gradient(
+    135deg,
+    var(--primary) 0%,
+    var(--primary-dark) 100%
+  );
+  color: var(--text);
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.odib-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.2),
+    transparent
+  );
+  transition: 0.5s;
+}
+
+.odib-button:hover::before {
+  left: 100%;
+}
+
+.odib-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+}
+
+.odib-button:disabled {
+  background: var(--surface);
+  cursor: not-allowed;
+  transform: none;
+}
+
+.odib-button i {
+  font-size: 1.2rem;
+}
+
+.character-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.character-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  border-color: var(--primary);
+}
+
+.character-image {
+  position: relative;
+  padding-top: 100%;
+  background: var(--background);
+}
+
+.character-image img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.character-card:hover .character-image img {
+  transform: scale(1.05);
+}
+
+.character-info {
+  padding: 1.5rem;
+}
+
+.character-info h4 {
+  margin: 0 0 0.75rem 0;
+  color: var(--primary);
+  font-size: 1.2rem;
+}
+
+.character-info p {
+  color: var(--text-muted);
+  margin: 0;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.character-actions {
+  display: flex;
+  gap: 0.75rem;
+  padding: 1rem;
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.loading-spinner {
+  display: inline-block;
+  width: 2rem;
+  height: 2rem;
+  border: 3px solid var(--surface);
+  border-radius: 50%;
+  border-top-color: var(--primary);
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.error-message {
+  background: rgba(239, 68, 68, 0.1);
+  border-left: 4px solid var(--danger);
+  color: var(--danger);
+  padding: 1rem;
+  margin: 1rem 0;
+  border-radius: 4px;
+}
+
+.success-message {
+  background: rgba(34, 197, 94, 0.1);
+  border-left: 4px solid var(--success);
+  color: var(--success);
+  padding: 1rem;
+  margin: 1rem 0;
+  border-radius: 4px;
+}
+
+.game-creator {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.game-creator__header {
+  background: var(--background);
+  padding: 2rem;
+  text-align: center;
+  border-bottom: 1px solid var(--border);
+}
+
+.game-creator__header h2 {
+  color: var(--primary);
+  font-size: 1.5rem;
+  margin: 0;
+}
+
+.creation-step {
+  padding: 2rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.creation-step:last-child {
+  border-bottom: none;
+}
+
+.creation-step h3 {
+  color: var(--text);
+  font-size: 1.2rem;
+  margin: 0 0 1.5rem 0;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.creation-step h3::before {
+  content: '';
+  display: block;
+  width: 24px;
+  height: 24px;
+  background: var(--primary);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8rem;
+  color: var(--text);
+}
+
+.type-buttons {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 1rem;
+}
+
+.type-btn {
+  background: var(--background);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.type-btn:hover {
+  border-color: var(--primary);
+  transform: translateY(-2px);
+}
+
+.type-btn.selected {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: var(--text);
+}
+
+.type-btn i {
+  font-size: 2rem;
+}
+
+@media (max-width: 768px) {
+  .odib-container {
+    margin: 1rem;
+    padding: 1rem;
+  }
+
+  .odib-tabs {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+  }
+
+  .odib-tab {
+    padding: 0.75rem 1rem;
+  }
+
+  .type-buttons {
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  }
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--surface);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--primary);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--primary-dark);
+}

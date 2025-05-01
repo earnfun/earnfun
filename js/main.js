@@ -73,64 +73,6 @@ jQuery(document).ready(function ($) {
 
         const submitButton = $(this).find('button[type="submit"]');
         submitButton.prop('disabled', true).html('<i class="fas fa-spinner fa-spin"></i> Creating Asset...');
-
-        $.ajax({
-            url: odibAjax.ajaxurl,
-            type: 'POST',
-            data: {
-                action: 'odib_generate_asset',
-                asset_type: assetType,
-                description: description,
-                _ajax_nonce: nonce
-            },
-            success: function (response) {
-                if (response.success) {
-                    $('.preview-section').show();
-                    $('.preview-image').html(`<img src="${response.data.image_url}" alt="Asset preview">`);
-
-                    const assetData = {
-                        asset_type: assetType,
-                        description: description,
-                        image_url: response.data.image_url,
-                        prompt: response.data.prompt
-                    };
-
-                    $('.save-asset').off('click').on('click', function () {
-                        saveAsset(assetData);
-                    });
-
-                    $('.regenerate-asset').off('click').on('click', function () {
-                        $('#create-asset-form').submit();
-                    });
-
-                    Swal.fire({
-                        title: 'Success!',
-                        text: 'Asset created successfully',
-                        icon: 'success',
-                        confirmButtonText: 'OK'
-                    });
-                } else {
-                    Swal.fire({
-                        title: 'Error!',
-                        text: 'Error creating asset: ' + (response.data || 'Unknown error'),
-                        icon: 'error',
-                        confirmButtonText: 'OK'
-                    });
-                }
-            },
-            error: function (xhr, status, error) {
-                console.error('AJAX Error:', error);
-                Swal.fire({
-                    title: 'Error!',
-                    text: 'An error occurred: ' + error,
-                    icon: 'error',
-                    confirmButtonText: 'OK'
-                });
-            },
-            complete: function () {
-                submitButton.prop('disabled', false).html('<i class="fas fa-magic"></i> Create Asset');
-            }
-        });
     });
 
     $(document).on('click', '.delete-asset', function (e) {
